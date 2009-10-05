@@ -1,4 +1,4 @@
-package orbit.util;
+package orbit;
 
 /**
  * Imports
