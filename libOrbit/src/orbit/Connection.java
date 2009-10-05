@@ -16,7 +16,7 @@ public class Connection {
     /** configuration */
     private String ServiceURL;
     private String Username = "root";
-    private String Password;
+    private String Password = "";
 
     /**
      * Create connection and return ServiceInstance
@@ -29,16 +29,16 @@ public class Connection {
 
         si = null;
         // validate connection
-        if (Username.isEmpty()) {
-            throw new ConnectionException("Empty Username.");
+        if (Username == null || Username.isEmpty()) {
+            throw new ConnectionException("Username cannot be empty!");
         }
 
-        if (Password.isEmpty()) {
-            throw new ConnectionException("Empty Password.");
+        if (Password == null) {
+            throw new ConnectionException("Password cannot be null.");
         }
 
-        if (ServiceURL.isEmpty()) {
-            throw new ConnectionException("Empty ServiceURL.");
+        if (ServiceURL == null ||  ServiceURL.isEmpty()) {
+            throw new ConnectionException("ServiceURL cannot be empty.");
         }
 
         // validate serviceurl
