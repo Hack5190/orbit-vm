@@ -45,6 +45,7 @@ public class managerLogin extends FrameView {
         serverTestField = new javax.swing.JTextField();
         loginTextField = new javax.swing.JTextField();
         passwordPasswordField = new javax.swing.JPasswordField();
+        headerLabel = new javax.swing.JLabel();
 
         loginPanel.setName("loginPanel"); // NOI18N
 
@@ -71,12 +72,15 @@ public class managerLogin extends FrameView {
 
         passwordPasswordField.setName("passwordPasswordField"); // NOI18N
 
+        headerLabel.setText(resourceMap.getString("headerLabel.text")); // NOI18N
+        headerLabel.setName("headerLabel"); // NOI18N
+
         javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
         loginPanel.setLayout(loginPanelLayout);
         loginPanelLayout.setHorizontalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(loginPanelLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addGap(27, 27, 27)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(loginButton)
                     .addGroup(loginPanelLayout.createSequentialGroup()
@@ -93,12 +97,14 @@ public class managerLogin extends FrameView {
                             .addComponent(serverTestField, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
                             .addComponent(loginTextField)
                             .addComponent(passwordPasswordField, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
+            .addComponent(headerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
         );
         loginPanelLayout.setVerticalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(loginPanelLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+                .addComponent(headerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serverTestField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(serverLabel))
@@ -112,13 +118,14 @@ public class managerLogin extends FrameView {
                     .addComponent(passwordLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loginButton)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addGap(44, 44, 44))
         );
 
         setComponent(loginPanel);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel headerLabel;
     private javax.swing.JButton loginButton;
     private javax.swing.JLabel loginLabel;
     private javax.swing.JPanel loginPanel;
