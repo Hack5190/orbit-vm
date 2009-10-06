@@ -19,12 +19,9 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="loginLabel" min="-2" max="-2" attributes="0"/>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="serverLabel" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="serverLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="passwordLabel" min="-2" max="-2" attributes="0"/>
@@ -76,25 +73,33 @@
         </Component>
         <Component class="javax.swing.JLabel" name="serverLabel">
           <Properties>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="serverTestField"/>
+            </Property>
             <Property name="text" type="java.lang.String" resourceKey="serverLabel.text"/>
             <Property name="name" type="java.lang.String" value="serverLabel" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="loginLabel">
           <Properties>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="loginTextField"/>
+            </Property>
             <Property name="text" type="java.lang.String" resourceKey="loginLabel.text"/>
             <Property name="name" type="java.lang.String" value="loginLabel" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="passwordLabel">
           <Properties>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="passwordPasswordField"/>
+            </Property>
             <Property name="text" type="java.lang.String" resourceKey="passwordLabel.text"/>
             <Property name="name" type="java.lang.String" value="passwordLabel" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="serverTestField">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="serverTestField.text"/>
             <Property name="name" type="java.lang.String" value="serverTestField" noResource="true"/>
           </Properties>
         </Component>
@@ -106,7 +111,6 @@
         </Component>
         <Component class="javax.swing.JPasswordField" name="passwordPasswordField">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="passwordPasswordField.text"/>
             <Property name="name" type="java.lang.String" value="passwordPasswordField" noResource="true"/>
           </Properties>
         </Component>

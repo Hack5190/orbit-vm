@@ -52,22 +52,23 @@ public class managerLogin extends FrameView {
         loginButton.setText(resourceMap.getString("loginButton.text")); // NOI18N
         loginButton.setName("loginButton"); // NOI18N
 
+        serverLabel.setLabelFor(serverTestField);
         serverLabel.setText(resourceMap.getString("serverLabel.text")); // NOI18N
         serverLabel.setName("serverLabel"); // NOI18N
 
+        loginLabel.setLabelFor(loginTextField);
         loginLabel.setText(resourceMap.getString("loginLabel.text")); // NOI18N
         loginLabel.setName("loginLabel"); // NOI18N
 
+        passwordLabel.setLabelFor(passwordPasswordField);
         passwordLabel.setText(resourceMap.getString("passwordLabel.text")); // NOI18N
         passwordLabel.setName("passwordLabel"); // NOI18N
 
-        serverTestField.setText(resourceMap.getString("serverTestField.text")); // NOI18N
         serverTestField.setName("serverTestField"); // NOI18N
 
         loginTextField.setText(resourceMap.getString("loginTextField.text")); // NOI18N
         loginTextField.setName("loginTextField"); // NOI18N
 
-        passwordPasswordField.setText(resourceMap.getString("passwordPasswordField.text")); // NOI18N
         passwordPasswordField.setName("passwordPasswordField"); // NOI18N
 
         javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
@@ -83,10 +84,8 @@ public class managerLogin extends FrameView {
                             .addGroup(loginPanelLayout.createSequentialGroup()
                                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(loginLabel)
-                                    .addGroup(loginPanelLayout.createSequentialGroup()
-                                        .addComponent(serverLabel)
-                                        .addGap(27, 27, 27)))
-                                .addGap(6, 6, 6))
+                                    .addComponent(serverLabel))
+                                .addGap(33, 33, 33))
                             .addGroup(loginPanelLayout.createSequentialGroup()
                                 .addComponent(passwordLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
