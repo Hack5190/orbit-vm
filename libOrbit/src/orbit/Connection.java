@@ -1,6 +1,13 @@
 package orbit;
 
 /**
+ * Todo:
+ * remove/set get
+ * create construct parameters
+ * make singleton
+ */
+
+/**
  * Imports
  */
 import java.net.URL;
