@@ -97,8 +97,8 @@ public class managerLogin extends FrameView {
                             .addComponent(serverTestField, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
                             .addComponent(loginTextField)
                             .addComponent(passwordPasswordField, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap(30, Short.MAX_VALUE))
-            .addComponent(headerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                .addContainerGap(164, Short.MAX_VALUE))
+            .addComponent(headerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
         );
         loginPanelLayout.setVerticalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
