@@ -1,21 +1,19 @@
 /*
  * managerView.java
  */
-
 package orbit;
 
 import java.awt.Dimension;
-import org.jdesktop.application.Action;
+import javax.swing.*;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
-import org.jdesktop.application.TaskMonitor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.Timer;
-import javax.swing.Icon;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
+
+// vijava
+import java.net.URL;
+import com.vmware.vim25.*;
+import com.vmware.vim25.mo.*;
+import java.net.MalformedURLException;
 
 /**
  * The application's main frame.
@@ -31,7 +29,6 @@ public class managerLogin extends FrameView {
         this.getFrame().setResizable(false);
         this.getFrame().setPreferredSize(new Dimension(350, 150));
     }
-
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -52,10 +49,16 @@ public class managerLogin extends FrameView {
         passwordPasswordField = new javax.swing.JPasswordField();
 
         loginPanel.setName("loginPanel"); // NOI18N
+        loginPanel.setPreferredSize(new java.awt.Dimension(350, 250));
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(orbit.manager.class).getContext().getResourceMap(managerLogin.class);
         loginButton.setText(resourceMap.getString("loginButton.text")); // NOI18N
         loginButton.setName("loginButton"); // NOI18N
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginAction(evt);
+            }
+        });
 
         serverLabel.setLabelFor(serverTestField);
         serverLabel.setText(resourceMap.getString("serverLabel.text")); // NOI18N
@@ -80,7 +83,7 @@ public class managerLogin extends FrameView {
         loginPanel.setLayout(loginPanelLayout);
         loginPanelLayout.setHorizontalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+            .addGroup(loginPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(loginButton)
@@ -90,11 +93,11 @@ public class managerLogin extends FrameView {
                             .addComponent(serverLabel)
                             .addComponent(loginLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(passwordPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                            .addComponent(serverTestField, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                            .addComponent(loginTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE))))
-                .addGap(378, 378, 378))
+                        .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(passwordPasswordField)
+                            .addComponent(loginTextField)
+                            .addComponent(serverTestField, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         loginPanelLayout.setVerticalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,6 +122,54 @@ public class managerLogin extends FrameView {
         setComponent(loginPanel);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void loginAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginAction
+        // locals
+        URL urlServer = null;
+        String stringUser, stringPassword;
+        ServiceInstance si;
+        boolean valid = true;
+
+        // validate
+        if (!serverTestField.getText().isEmpty()) {
+            try {
+                if (serverTestField.getText().endsWith("/sdk")) { // allow for full url entry
+                    urlServer = new URL(serverTestField.getText());
+                } else {
+                    urlServer = new URL("https://" + serverTestField.getText() + "/sdk");
+                }
+            } catch (MalformedURLException e) {
+                JOptionPane.showMessageDialog(null, "Invalid server!", "Error", JOptionPane.ERROR_MESSAGE);
+                valid = false;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please enter a server!", "Warning", JOptionPane.WARNING_MESSAGE);
+            valid = false;
+        }
+
+        stringUser = loginTextField.getText();
+        if (valid && stringUser.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter a login!", "Warning", JOptionPane.WARNING_MESSAGE);
+            valid = false;
+        }
+
+        stringPassword = new String(passwordPasswordField.getPassword());
+        if (valid && stringPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter a password!", "Warning", JOptionPane.WARNING_MESSAGE);
+            valid = false;
+        }
+
+        // connect
+        if (valid) {
+            try {
+            si = new ServiceInstance(urlServer, stringUser, stringPassword, true);
+            } catch (com.vmware.vim25.InvalidLogin il) {
+                JOptionPane.showMessageDialog(null, "Invalid login!", "Warning", JOptionPane.WARNING_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+    }//GEN-LAST:event_loginAction
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton loginButton;
     private javax.swing.JLabel loginLabel;
@@ -129,5 +180,4 @@ public class managerLogin extends FrameView {
     private javax.swing.JLabel serverLabel;
     private javax.swing.JTextField serverTestField;
     // End of variables declaration//GEN-END:variables
-
 }

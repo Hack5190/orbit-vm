@@ -16,15 +16,24 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+// vijava
+import com.vmware.vim25.*;
+import com.vmware.vim25.mo.*;
+
 /**
  * The application's main frame.
  */
 public class managerView extends FrameView {
 
-    public managerView(SingleFrameApplication app) {
+    private ServiceInstance si;
+
+    public managerView(SingleFrameApplication app, ServiceInstance si) {
         super(app);
 
         initComponents();
+
+        // store service instance
+        this.si = si;
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
