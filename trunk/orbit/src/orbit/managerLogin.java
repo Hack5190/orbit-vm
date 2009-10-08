@@ -20,6 +20,8 @@ import java.net.MalformedURLException;
  */
 public class managerLogin extends FrameView {
 
+    private SingleFrameApplication Application;
+
     public managerLogin(SingleFrameApplication app) {
         super(app);
 
@@ -126,7 +128,7 @@ public class managerLogin extends FrameView {
         // locals
         URL urlServer = null;
         String stringUser, stringPassword;
-        ServiceInstance si;
+        ServiceInstance si = null;
         boolean valid = true;
 
         // validate
@@ -167,6 +169,10 @@ public class managerLogin extends FrameView {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             }
+        }
+
+        if (si != null) {
+            Application.show(new managerView(Application, si));
         }
 
     }//GEN-LAST:event_loginAction
