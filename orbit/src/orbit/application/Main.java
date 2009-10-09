@@ -23,8 +23,8 @@ public class Main {
         //TODO: set system style
 
         // create initial window
-        JFrame loginFrame = new loginFrame();
-        loginFrame.setVisible(true);
+        JFrame loginWindow = new loginFrame();
+        loginWindow.setVisible(true);
 
     }
 }
