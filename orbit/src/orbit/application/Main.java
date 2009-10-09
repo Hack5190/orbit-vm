@@ -11,7 +11,7 @@ package orbit.application;
 /**
  * Imports
  */
-import javax.swing.JFrame;
+import javax.swing.*;
 import orbit.application.window.*;
 
 public class Main {
@@ -20,9 +20,13 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //TODO: set system style
-
-        // create initial window
+        // system look & feel
+        try {
+        UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) { /* do nothing */ }
+        
+        // create login window
         JFrame loginWindow = new loginFrame();
         loginWindow.setVisible(true);
 
