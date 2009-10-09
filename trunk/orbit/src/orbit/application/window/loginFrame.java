@@ -70,6 +70,8 @@ public class loginFrame extends JFrame {
 
         // main
         mainPanel = new JPanel();
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        //TODO: label input * 3 + one row with right aligned button
         mainPanel.setLayout(null);
         content.add(mainPanel, BorderLayout.CENTER);
 
@@ -98,9 +100,12 @@ public class loginFrame extends JFrame {
         formLabels[2].setText("Password:");
         //TODO: setLocation/setPrefSize
 
+        // form - input
         //TODO: add server,login and password field
-        //TODO: add button
-
+        
+        // form - login button
+        loginButton.setText("Login");
+        //TODO: localtion
         //TODO: attach event
         //TODO: add si login code (sjorge)
 
