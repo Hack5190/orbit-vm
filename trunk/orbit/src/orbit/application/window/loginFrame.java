@@ -78,13 +78,13 @@ public class loginFrame extends JFrame {
         formPanels = new JPanel[4];
         for (int i = 0; i < formPanels.length; i++) {
             formPanels[i] = new JPanel();
+            formPanels[i].setLayout(new BorderLayout());
             if (i > 0) {
                 formPanels[(i - 1)].add(formPanels[i], BorderLayout.CENTER);
             }
         }
 
         formPanels[0].setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        formPanels[0].setLayout(new BorderLayout());
         content.add(formPanels[0], BorderLayout.CENTER);
 
         // form - initilization
