@@ -8,8 +8,8 @@ package orbit.application.window;
  * Imports
  */
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
 public class loginFrame extends JFrame {
     // variables
@@ -22,7 +22,7 @@ public class loginFrame extends JFrame {
     private JTextField loginText;
     private JPasswordField passwordText;
     private JButton loginButton;
-    private JButton cancelButton;
+    private JButton closeButton;
 
     public loginFrame() {
         // get content
@@ -40,6 +40,7 @@ public class loginFrame extends JFrame {
 
         // gui
         this.createGUI();
+        this.attachEvents();
         this.restoreSession();
     }
 
@@ -53,6 +54,13 @@ public class loginFrame extends JFrame {
                 (dim.width - abounds.width) / 2,
                 (dim.height - abounds.height) / 2);
         this.requestFocus();
+    }
+
+    /**
+     * Attach events to components
+     */
+    public void attachEvents() {
+        new closeButtonClick(closeButton);
     }
 
     /**
@@ -111,7 +119,7 @@ public class loginFrame extends JFrame {
         passwordText = new JPasswordField();
         buttonPanel = new JPanel();
         loginButton = new JButton();
-        cancelButton = new JButton();
+        closeButton = new JButton();
         statusLabel = new JLabel();
 
         formLabels = new JLabel[3];
@@ -152,13 +160,28 @@ public class loginFrame extends JFrame {
         buttonPanel.setPreferredSize(new Dimension(350, 30));
         buttonPanel.add(statusLabel);
         buttonPanel.add(loginButton);
-        buttonPanel.add(cancelButton);
+        buttonPanel.add(closeButton);
 
         loginButton.setText("Login");
         //TODO: add login code (sjorge)
 
-        cancelButton.setText("Close");
+        closeButton.setText("Close");
         //TODO: add cancel code (sjorge)
 
+    }
+}
+
+/**
+ * close button click event
+ * @author sjorge
+ */
+class closeButtonClick implements ActionListener {
+
+    public closeButtonClick(JButton button) {
+        button.addActionListener(this);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        System.exit(0);
     }
 }
