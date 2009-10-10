@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package orbit.application.window;
 
 /**
@@ -44,6 +40,7 @@ public class loginFrame extends JFrame {
 
         // gui
         this.createGUI();
+        this.restoreSession();
     }
 
     /**
@@ -58,6 +55,24 @@ public class loginFrame extends JFrame {
         this.requestFocus();
     }
 
+    /**
+     * Store Session
+     */
+    public void storeSession() {
+        //TODO: store session
+    }
+
+    /**
+     * Restore Session
+     */
+    public void restoreSession() {
+        //TODO: retrieve session
+        //TODO: push to ui
+    }
+
+    /**
+     * Create GUI
+     */
     public void createGUI() {
         // locals
         JPanel formPanels[], serverPanel, loginPanel, passwordPanel, buttonPanel;
@@ -67,7 +82,7 @@ public class loginFrame extends JFrame {
 
         // header
         headerLabel = new JLabel();
-        headerLabel.setPreferredSize(new Dimension(350, 50));
+        headerLabel.setPreferredSize(new Dimension(350, 75));
         // next 2 lines = temp till header image
         headerLabel.setBackground(Color.DARK_GRAY);
         headerLabel.setOpaque(true);
@@ -75,7 +90,7 @@ public class loginFrame extends JFrame {
         content.add(headerLabel, BorderLayout.NORTH);
 
         // main
-        formPanels = new JPanel[4];
+        formPanels = new JPanel[3];
         for (int i = 0; i < formPanels.length; i++) {
             formPanels[i] = new JPanel();
             formPanels[i].setLayout(new BorderLayout());
@@ -97,6 +112,7 @@ public class loginFrame extends JFrame {
         buttonPanel = new JPanel();
         loginButton = new JButton();
         cancelButton = new JButton();
+        statusLabel = new JLabel();
 
         formLabels = new JLabel[3];
         for (int i = 0; i < formLabels.length; i++) {
@@ -117,34 +133,32 @@ public class loginFrame extends JFrame {
         serverPanel.add(serverText, BorderLayout.CENTER);
 
         formPanels[1].add(loginPanel, BorderLayout.NORTH);
+        loginText.setText("root");
         loginPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
         loginPanel.setLayout(new BorderLayout());
         loginPanel.add(formLabels[1], BorderLayout.WEST);
         loginPanel.add(loginText, BorderLayout.CENTER);
 
-        formPanels[1].add(passwordPanel, BorderLayout.NORTH);
+        formPanels[2].add(passwordPanel, BorderLayout.NORTH);
         passwordPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
         passwordPanel.setLayout(new BorderLayout());
         passwordPanel.add(formLabels[2], BorderLayout.WEST);
         passwordPanel.add(passwordText, BorderLayout.CENTER);
 
-        // form - login button
+        // form - status/button
+        content.add(buttonPanel, BorderLayout.SOUTH);
+        buttonPanel.setLayout(new GridLayout(1, 3));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(2,5,5,5));
+        buttonPanel.setPreferredSize(new Dimension(350, 30));
+        buttonPanel.add(statusLabel);
+        buttonPanel.add(loginButton);
+        buttonPanel.add(cancelButton);
+
         loginButton.setText("Login");
-        //TODO: localtion
-        //TODO: attach event
-        //TODO: add si login code (sjorge)
+        //TODO: add login code (sjorge)
 
-        // form - cancel button
-        cancelButton.setText("Login");
-        //TODO: localtion
-        //TODO: attach event
-        //TODO: add si cancel code (sjorge)
+        cancelButton.setText("Close");
+        //TODO: add cancel code (sjorge)
 
-        // status
-        statusLabel = new JLabel();
-        statusLabel.setPreferredSize(new Dimension(350, 22));
-        statusLabel.setBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-        content.add(statusLabel, BorderLayout.SOUTH);
     }
 }
