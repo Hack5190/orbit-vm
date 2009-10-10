@@ -9,11 +9,19 @@ package orbit.application.window;
  */
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.*;
 import javax.swing.*;
+
+// vijava
+import java.net.*;
+import com.vmware.vim25.*;
+import com.vmware.vim25.mo.*;
+import java.rmi.RemoteException;
 
 public class loginFrame extends JFrame {
     // variables
 
+    private loginFrame window;
     private Container content;
     private JLabel headerLabel;
     private JLabel statusLabel;
@@ -25,23 +33,26 @@ public class loginFrame extends JFrame {
     private JButton closeButton;
 
     public loginFrame() {
+        // self reference
+        window = this;
+
         // get content
-        content = this.getContentPane();
+        content = window.getContentPane();
 
         // main windows setup
-        this.setTitle("Orbit Manager");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setTitle("Orbit Manager");
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //TODO: icon (somehow get the resources in orbit.application.resources
-        this.setResizable(false);
-        this.setSize(new Dimension(350, 250));
-        this.setPreferredSize(new Dimension(350, 250));
-        this.setMaximumSize(new Dimension(350, 250));
-        this.centerScreen();
+        window.setResizable(false);
+        window.setSize(new Dimension(350, 250));
+        window.setPreferredSize(new Dimension(350, 250));
+        window.setMaximumSize(new Dimension(350, 250));
+        window.centerScreen();
 
         // gui
-        this.createGUI();
-        this.attachEvents();
-        this.restoreSession();
+        window.createGUI();
+        window.attachEvents();
+        window.restoreSession();
     }
 
     /**
@@ -50,10 +61,10 @@ public class loginFrame extends JFrame {
     public void centerScreen() {
         Dimension dim = getToolkit().getScreenSize();
         Rectangle abounds = getBounds();
-        this.setLocation(
+        window.setLocation(
                 (dim.width - abounds.width) / 2,
                 (dim.height - abounds.height) / 2);
-        this.requestFocus();
+        window.requestFocus();
     }
 
     /**
@@ -61,6 +72,7 @@ public class loginFrame extends JFrame {
      */
     public void attachEvents() {
         new closeButtonClick(closeButton);
+        new loginButtonClick(loginButton);
     }
 
     /**
@@ -83,7 +95,8 @@ public class loginFrame extends JFrame {
      */
     public void createGUI() {
         // locals
-        JPanel formPanels[], serverPanel, loginPanel, passwordPanel, buttonPanel;
+        JPanel formPanels[], serverPanel, loginPanel,
+                passwordPanel, buttonPanel, statusPanel;
 
         // layout
         content.setLayout(new BorderLayout(0, 0));
@@ -120,6 +133,7 @@ public class loginFrame extends JFrame {
         buttonPanel = new JPanel();
         loginButton = new JButton();
         closeButton = new JButton();
+        statusPanel = new JPanel();
         statusLabel = new JLabel();
 
         formLabels = new JLabel[3];
@@ -153,35 +167,138 @@ public class loginFrame extends JFrame {
         passwordPanel.add(formLabels[2], BorderLayout.WEST);
         passwordPanel.add(passwordText, BorderLayout.CENTER);
 
-        // form - status/button
-        content.add(buttonPanel, BorderLayout.SOUTH);
-        buttonPanel.setLayout(new GridLayout(1, 3));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(2,5,5,5));
-        buttonPanel.setPreferredSize(new Dimension(350, 30));
-        buttonPanel.add(statusLabel);
+        // form - statusbar
+        content.add(statusPanel, BorderLayout.SOUTH);
+        statusPanel.setLayout(new BorderLayout());
+        statusPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
+        statusPanel.setPreferredSize(new Dimension(350, 30));
+        statusPanel.add(statusLabel, BorderLayout.CENTER);
+
+        // form - buttons
+        statusPanel.add(buttonPanel, BorderLayout.EAST);
+        buttonPanel.setLayout(new GridLayout(1, 2));
+        buttonPanel.setPreferredSize(new Dimension(170, 20));
         buttonPanel.add(loginButton);
         buttonPanel.add(closeButton);
-
+        
         loginButton.setText("Login");
-        //TODO: add login code (sjorge)
-
         closeButton.setText("Close");
-        //TODO: add cancel code (sjorge)
 
     }
-}
 
-/**
- * close button click event
- * @author sjorge
- */
-class closeButtonClick implements ActionListener {
+    /**
+     * close button click event
+     * @author sjorge
+     */
+    class closeButtonClick implements ActionListener {
 
-    public closeButtonClick(JButton button) {
-        button.addActionListener(this);
+        public closeButtonClick(JButton button) {
+            button.addActionListener(this);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
     }
 
-    public void actionPerformed(ActionEvent e) {
-        System.exit(0);
+    /**
+     * login button click event
+     * @author sjorge
+     */
+    class loginButtonClick implements ActionListener {
+
+        public loginButtonClick(JButton button) {
+            button.addActionListener(this);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            // disable button
+            loginButton.setEnabled(false);
+            loginButton.repaint();
+
+            // set status
+            statusLabel.setText("Connecting ...");
+            statusLabel.repaint();
+
+            // setup connection
+            ServerConnector sc = new ServerConnector(
+                    serverText.getText(),
+                    loginText.getText(),
+                    new String(passwordText.getPassword()));
+            sc.start();
+
+        }
+    }
+
+    /**
+     * Connection thread
+     */
+    class ServerConnector extends Thread {
+
+        // variables
+        private boolean valid = true;
+        private URL urlServer = null;
+        private String stringUser, stringPassword;
+        private ServiceInstance si = null;
+
+        ServerConnector(String url, String user, String password) {
+            // store variables
+            this.stringUser = user;
+            this.stringPassword = password;
+            if (!url.isEmpty()) {
+                try {
+                    if (url.endsWith("/sdk")) { // allow for full url entry
+                        urlServer = new URL(url);
+                    } else {
+                        urlServer = new URL("https://" + url + "/sdk");
+                    }
+                } catch (java.net.MalformedURLException mue) {
+                    valid = false;
+                    this.statusMessage("Invalid server name!");
+                }
+            } else {
+                valid = false;
+                this.statusMessage("Enter server name.");
+            }
+
+            if (valid && stringUser.isEmpty()) {
+                valid = false;
+                this.statusMessage("Please enter login.");
+            }
+
+        }
+
+        private void statusMessage(String msg) {
+            statusLabel.setText(msg);
+            statusLabel.repaint();
+        }
+
+        public void run() {
+            // connect
+            if (valid) {
+                try {
+                    si = new ServiceInstance(urlServer, stringUser, stringPassword, true);
+                } catch (com.vmware.vim25.InvalidLogin il) {
+                    valid = false;
+                    this.statusMessage("Invalid login!");
+                } catch (Exception ex) {
+                    valid = false;
+                    this.statusMessage("Connection failed!");
+                }
+                //TODO: if valid, show form
+            }
+
+            // clean status
+            if (!valid) {
+                loginButton.setEnabled(true);
+            }
+            loginButton.repaint();
+            try {
+                sleep(2500);
+            } catch (Exception ex) {
+            } finally {
+                this.statusMessage("");
+            }
+        }
     }
 }
