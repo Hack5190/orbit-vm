@@ -78,7 +78,7 @@ public class loginFrame extends JFrame {
         formPanel = new JPanel();
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         //TODO: label input * 3 + one row with right aligned button
-        formPanel.setLayout(new BorderLayout());
+        formPanel.setLayout(new GridLayout(4, 1));
         content.add(formPanel, BorderLayout.CENTER);
 
         // form - initilization
@@ -105,17 +105,20 @@ public class loginFrame extends JFrame {
         //TODO: setLocation/setPrefSize
 
         // form - input
-        formPanel.add(serverPanel, BorderLayout.NORTH);
+        formPanel.add(serverPanel);
+        serverPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
         serverPanel.setLayout(new BorderLayout());
         serverPanel.add(formLabels[0], BorderLayout.WEST);
         serverPanel.add(serverText, BorderLayout.CENTER);
 
-        formPanel.add(loginPanel, BorderLayout.CENTER);
+        formPanel.add(loginPanel);
+        loginPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
         loginPanel.setLayout(new BorderLayout());
         loginPanel.add(formLabels[1], BorderLayout.WEST);
         loginPanel.add(loginText, BorderLayout.CENTER);
 
-        formPanel.add(passwordPanel, BorderLayout.SOUTH);
+        formPanel.add(passwordPanel);
+        passwordPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
         passwordPanel.setLayout(new BorderLayout());
         passwordPanel.add(formLabels[2], BorderLayout.WEST);
         passwordPanel.add(passwordText, BorderLayout.CENTER);
