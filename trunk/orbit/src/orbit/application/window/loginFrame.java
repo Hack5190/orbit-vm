@@ -21,12 +21,12 @@ public class loginFrame extends JFrame {
     private Container content;
     private JLabel headerLabel;
     private JLabel statusLabel;
-    private JPanel mainPanel;
     private JLabel[] formLabels;
     private JTextField serverText;
     private JTextField loginText;
     private JPasswordField passwordText;
     private JButton loginButton;
+    private JButton cancelButton;
 
     public loginFrame() {
         // get content
@@ -59,39 +59,43 @@ public class loginFrame extends JFrame {
     }
 
     public void createGUI() {
+        // locals
+        JPanel formPanel, serverPanel, loginPanel, passwordPanel, buttonPanel;
+
         // layout
         content.setLayout(new BorderLayout(0, 0));
 
         // header
         headerLabel = new JLabel();
         headerLabel.setPreferredSize(new Dimension(350, 50));
+        // next 2 lines = temp till header image
+        headerLabel.setBackground(Color.DARK_GRAY);
+        headerLabel.setOpaque(true);
         // TODO: header image (from resource hopefully)
         content.add(headerLabel, BorderLayout.NORTH);
 
         // main
-        mainPanel = new JPanel();
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        formPanel = new JPanel();
+        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         //TODO: label input * 3 + one row with right aligned button
-        mainPanel.setLayout(null);
-        content.add(mainPanel, BorderLayout.CENTER);
+        formPanel.setLayout(new BorderLayout());
+        content.add(formPanel, BorderLayout.CENTER);
 
         // form - initilization
+        serverPanel = new JPanel();
         serverText = new JTextField();
-        mainPanel.add(serverText);
-
+        loginPanel = new JPanel();
         loginText = new JTextField();
-        mainPanel.add(loginText);
-
+        passwordPanel = new JPanel();
         passwordText = new JPasswordField();
-        mainPanel.add(passwordText);
-
+        buttonPanel = new JPanel();
         loginButton = new JButton();
-        mainPanel.add(loginButton);
-
+        cancelButton = new JButton();
+        
         formLabels = new JLabel[3];
         for (int i = 0; i < formLabels.length; i++) {
             formLabels[i] = new JLabel();
-            mainPanel.add(formLabels[i]);
+            formLabels[i].setPreferredSize(new Dimension(70, 20));
         }
 
         // form - set labels
@@ -101,10 +105,29 @@ public class loginFrame extends JFrame {
         //TODO: setLocation/setPrefSize
 
         // form - input
-        //TODO: add server,login and password field
-        
+        formPanel.add(serverPanel, BorderLayout.NORTH);
+        serverPanel.setLayout(new BorderLayout());
+        serverPanel.add(formLabels[0], BorderLayout.WEST);
+        serverPanel.add(serverText, BorderLayout.CENTER);
+
+        formPanel.add(loginPanel, BorderLayout.CENTER);
+        loginPanel.setLayout(new BorderLayout());
+        loginPanel.add(formLabels[1], BorderLayout.WEST);
+        loginPanel.add(loginText, BorderLayout.CENTER);
+
+        formPanel.add(passwordPanel, BorderLayout.SOUTH);
+        passwordPanel.setLayout(new BorderLayout());
+        passwordPanel.add(formLabels[2], BorderLayout.WEST);
+        passwordPanel.add(passwordText, BorderLayout.CENTER);
+
         // form - login button
         loginButton.setText("Login");
+        //TODO: localtion
+        //TODO: attach event
+        //TODO: add si login code (sjorge)
+
+        // form - cancel button
+        cancelButton.setText("Login");
         //TODO: localtion
         //TODO: attach event
         //TODO: add si login code (sjorge)
