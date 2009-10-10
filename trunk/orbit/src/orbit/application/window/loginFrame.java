@@ -60,7 +60,7 @@ public class loginFrame extends JFrame {
 
     public void createGUI() {
         // locals
-        JPanel formPanel, serverPanel, loginPanel, passwordPanel, buttonPanel;
+        JPanel formPanels[], serverPanel, loginPanel, passwordPanel, buttonPanel;
 
         // layout
         content.setLayout(new BorderLayout(0, 0));
@@ -75,11 +75,17 @@ public class loginFrame extends JFrame {
         content.add(headerLabel, BorderLayout.NORTH);
 
         // main
-        formPanel = new JPanel();
-        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        //TODO: label input * 3 + one row with right aligned button
-        formPanel.setLayout(new GridLayout(4, 1));
-        content.add(formPanel, BorderLayout.CENTER);
+        formPanels = new JPanel[4];
+        for (int i = 0; i < formPanels.length; i++) {
+            formPanels[i] = new JPanel();
+            if (i > 0) {
+                formPanels[(i - 1)].add(formPanels[i], BorderLayout.CENTER);
+            }
+        }
+
+        formPanels[0].setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        formPanels[0].setLayout(new BorderLayout());
+        content.add(formPanels[0], BorderLayout.CENTER);
 
         // form - initilization
         serverPanel = new JPanel();
@@ -91,7 +97,7 @@ public class loginFrame extends JFrame {
         buttonPanel = new JPanel();
         loginButton = new JButton();
         cancelButton = new JButton();
-        
+
         formLabels = new JLabel[3];
         for (int i = 0; i < formLabels.length; i++) {
             formLabels[i] = new JLabel();
@@ -102,22 +108,21 @@ public class loginFrame extends JFrame {
         formLabels[0].setText("Server:");
         formLabels[1].setText("Login:");
         formLabels[2].setText("Password:");
-        //TODO: setLocation/setPrefSize
 
         // form - input
-        formPanel.add(serverPanel);
+        formPanels[0].add(serverPanel, BorderLayout.NORTH);
         serverPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
         serverPanel.setLayout(new BorderLayout());
         serverPanel.add(formLabels[0], BorderLayout.WEST);
         serverPanel.add(serverText, BorderLayout.CENTER);
 
-        formPanel.add(loginPanel);
+        formPanels[1].add(loginPanel, BorderLayout.NORTH);
         loginPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
         loginPanel.setLayout(new BorderLayout());
         loginPanel.add(formLabels[1], BorderLayout.WEST);
         loginPanel.add(loginText, BorderLayout.CENTER);
 
-        formPanel.add(passwordPanel);
+        formPanels[1].add(passwordPanel, BorderLayout.NORTH);
         passwordPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
         passwordPanel.setLayout(new BorderLayout());
         passwordPanel.add(formLabels[2], BorderLayout.WEST);
@@ -133,7 +138,7 @@ public class loginFrame extends JFrame {
         cancelButton.setText("Login");
         //TODO: localtion
         //TODO: attach event
-        //TODO: add si login code (sjorge)
+        //TODO: add si cancel code (sjorge)
 
         // status
         statusLabel = new JLabel();
