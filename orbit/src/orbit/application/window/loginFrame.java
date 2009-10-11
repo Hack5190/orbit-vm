@@ -161,6 +161,7 @@ public class loginFrame extends JFrame {
 	formPanels[0].add(serverPanel, BorderLayout.NORTH);
 	serverPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
 	serverPanel.setLayout(new BorderLayout());
+	formLabels[0].setLabelFor(serverText);
 	serverPanel.add(formLabels[0], BorderLayout.WEST);
 	serverPanel.add(serverText, BorderLayout.CENTER);
 
@@ -168,12 +169,14 @@ public class loginFrame extends JFrame {
 	loginText.setText("root");
 	loginPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
 	loginPanel.setLayout(new BorderLayout());
+	formLabels[1].setLabelFor(loginText);
 	loginPanel.add(formLabels[1], BorderLayout.WEST);
 	loginPanel.add(loginText, BorderLayout.CENTER);
 
 	formPanels[2].add(passwordPanel, BorderLayout.NORTH);
 	passwordPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
 	passwordPanel.setLayout(new BorderLayout());
+	formLabels[2].setLabelFor(passwordText);
 	passwordPanel.add(formLabels[2], BorderLayout.WEST);
 	passwordPanel.add(passwordText, BorderLayout.CENTER);
 
@@ -250,7 +253,7 @@ public class loginFrame extends JFrame {
 
 	ServerConnector(String url, String user, String password) {
 	    // status
-	    this.statusMessage("Connecting ...");
+	    this.statusMessage("Connecting ...", "processing");
 
 	    // store variables
 	    this.stringUser = user;
@@ -264,23 +267,36 @@ public class loginFrame extends JFrame {
 		    }
 		} catch (java.net.MalformedURLException mue) {
 		    valid = false;
-		    this.statusMessage("Invalid server name!");
+		    this.statusMessage("Invalid server name!", "error");
 		}
 	    } else {
 		valid = false;
-		this.statusMessage("Enter server name.");
+		this.statusMessage("Enter server name.", "alert");
 	    }
 
 	    if (valid && stringUser.isEmpty()) {
 		valid = false;
-		this.statusMessage("Please enter login.");
+		this.statusMessage("Please enter login.", "alert");
 	    }
 
 	}
 
 	public void statusMessage(String msg) {
-	    //TODO: statatus icon
+	    this.statusMessage(msg, null);
+	}
+
+	public void statusMessage(String msg, String icon) {
 	    statusLabel.setText(msg);
+	    if (icon == null || icon.isEmpty()) {
+		statusLabel.setIcon(null);
+	    } else {
+		try {
+		    statusLabel.setIcon(new ImageIcon(window.getClass().getResource(String.format("/orbit/application/resources/statusbar/%s.gif", icon))));
+		} catch (Exception e) {
+		    statusLabel.setIcon(null);
+		}
+	    }
+
 	    statusLabel.repaint();
 	}
 
@@ -291,12 +307,16 @@ public class loginFrame extends JFrame {
 		    si = new ServiceInstance(urlServer, stringUser, stringPassword, true);
 		} catch (com.vmware.vim25.InvalidLogin il) {
 		    valid = false;
-		    this.statusMessage("Invalid login!");
+		    this.statusMessage("Invalid login!", "alert");
 		} catch (Exception ex) {
 		    valid = false;
-		    this.statusMessage("Connection failed!");
+		    this.statusMessage("Connection failed!", "error");
+		} finally {
+		    if (si != null) {
+			this.statusMessage("Connected!", "ok");
+			//TODO: if valid, show form
+		    }
 		}
-		//TODO: if valid, show form
 	    }
 
 	    // clean status
