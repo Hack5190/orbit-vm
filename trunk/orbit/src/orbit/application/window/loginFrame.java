@@ -9,21 +9,19 @@ package orbit.application.window;
  */
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
 import java.lang.*;
+import java.util.*;
 import java.io.*;
 import javax.imageio.*;
 import javax.swing.*;
 
 // vijava
 import java.net.*;
-import java.rmi.*;
-import com.vmware.vim25.*;
 import com.vmware.vim25.mo.*;
 
 public class loginFrame extends JFrame {
-    // variables
 
+    // variables
     private loginFrame window;
     private Container content;
     private JLabel headerLabel;
@@ -61,6 +59,20 @@ public class loginFrame extends JFrame {
 	window.createGUI();
 	window.attachEvents();
 	window.restoreSession();
+
+	// focus password if needed
+	if (!serverText.getText().isEmpty()) {
+	    if (!loginText.getText().isEmpty()) {
+		window.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy() {
+
+		    @Override
+		    public Component getFirstComponent(Container aContainer) {
+			return passwordText;
+		    }
+		});
+
+	    }
+	}
     }
 
     /**
@@ -87,15 +99,46 @@ public class loginFrame extends JFrame {
      * Store Session
      */
     public void storeSession() {
-	//TODO: store session
+	// locals
+	Properties config = new Properties();
+
+	try {
+	    // load
+	    if (new File("orbit.properties").exists()) {
+		config.load(new FileInputStream("orbit.properties"));
+	    }
+
+	    // set recent server/user
+	    config.setProperty("recent.server", serverText.getText());
+	    config.setProperty("recent.login", loginText.getText());
+
+	    // save file
+	    config.store(new FileOutputStream("orbit.properties"), null);
+	} catch (IOException e) {
+	    // we gave it our best
+	}
     }
 
     /**
      * Restore Session
      */
     public void restoreSession() {
-	//TODO: retrieve session
-	//TODO: push to ui
+	// locals
+	Properties config = new Properties();
+
+	try {
+	    // load
+	    if (new File("orbit.properties").exists()) {
+		config.load(new FileInputStream("orbit.properties"));
+	    }
+
+	    // set recent server/user
+	    serverText.setText(config.getProperty("recent.server", ""));
+	    loginText.setText(config.getProperty("recent.login", "root"));
+
+	} catch (IOException e) {
+	    // we gave it our best
+	}
     }
 
     /**
@@ -308,11 +351,13 @@ public class loginFrame extends JFrame {
 		} catch (com.vmware.vim25.InvalidLogin il) {
 		    valid = false;
 		    this.statusMessage("Invalid login!", "alert");
+		    passwordText.requestFocus();
 		} catch (Exception ex) {
 		    valid = false;
 		    this.statusMessage("Connection failed!", "error");
 		} finally {
 		    if (si != null) {
+			window.storeSession();
 			this.statusMessage("Connected!", "ok");
 			//TODO: if valid, show form
 		    }
