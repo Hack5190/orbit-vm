@@ -84,7 +84,7 @@ public class loginFrame extends JFrame {
 	window.setLocation(
 		(dim.width - abounds.width) / 2,
 		(dim.height - abounds.height) / 2);
-	window.requestFocus();
+	window.requestFocusInWindow();
     }
 
     /**
@@ -311,15 +311,18 @@ public class loginFrame extends JFrame {
 		} catch (java.net.MalformedURLException mue) {
 		    valid = false;
 		    this.statusMessage("Invalid server name!", "error");
+                    serverText.requestFocusInWindow();
 		}
 	    } else {
 		valid = false;
 		this.statusMessage("Enter server name.", "alert");
+                serverText.requestFocusInWindow();
 	    }
 
 	    if (valid && stringUser.isEmpty()) {
 		valid = false;
 		this.statusMessage("Please enter login.", "alert");
+                loginText.requestFocusInWindow();
 	    }
 
 	}
@@ -351,7 +354,7 @@ public class loginFrame extends JFrame {
 		} catch (com.vmware.vim25.InvalidLogin il) {
 		    valid = false;
 		    this.statusMessage("Invalid login!", "alert");
-		    passwordText.requestFocus();
+		    passwordText.requestFocusInWindow();
 		} catch (Exception ex) {
 		    valid = false;
 		    this.statusMessage("Connection failed!", "error");
