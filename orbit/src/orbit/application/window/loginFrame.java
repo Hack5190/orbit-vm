@@ -113,8 +113,7 @@ public class loginFrame extends JFrame {
 	headerLabel = new JLabel();
 	headerLabel.setPreferredSize(new Dimension(350, 75));
 	try {
-	    //TODO: convert to icon and set
-	    //headerLabel.setIcon(window.getClass().getResource("/orbit/application/resources/header.png"));
+	    headerLabel.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/header.png")));
 	} catch (Exception e) {
 	    headerLabel.setBackground(Color.DARK_GRAY);
 	    headerLabel.setOpaque(true);
@@ -192,6 +191,7 @@ public class loginFrame extends JFrame {
 	buttonPanel.add(loginButton);
 	buttonPanel.add(closeButton);
 
+	window.getRootPane().setDefaultButton(loginButton);
 	loginButton.setText("Login");
 	closeButton.setText("Close");
 
@@ -227,10 +227,6 @@ public class loginFrame extends JFrame {
 	    loginButton.setEnabled(false);
 	    loginButton.repaint();
 
-	    // set status
-	    statusLabel.setText("Connecting ...");
-	    statusLabel.repaint();
-
 	    // setup connection
 	    ServerConnector sc = new ServerConnector(
 		    serverText.getText(),
@@ -253,6 +249,9 @@ public class loginFrame extends JFrame {
 	private ServiceInstance si = null;
 
 	ServerConnector(String url, String user, String password) {
+	    // status
+	    this.statusMessage("Connecting ...");
+
 	    // store variables
 	    this.stringUser = user;
 	    this.stringPassword = password;
@@ -279,7 +278,8 @@ public class loginFrame extends JFrame {
 
 	}
 
-	private void statusMessage(String msg) {
+	public void statusMessage(String msg) {
+	    //TODO: statatus icon
 	    statusLabel.setText(msg);
 	    statusLabel.repaint();
 	}
