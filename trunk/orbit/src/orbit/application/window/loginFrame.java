@@ -17,6 +17,7 @@ import javax.swing.*;
 
 // vijava
 import java.net.*;
+import com.vmware.vim25.*;
 import com.vmware.vim25.mo.*;
 
 public class loginFrame extends JFrame {
@@ -32,214 +33,230 @@ public class loginFrame extends JFrame {
     private JPasswordField passwordText;
     private JButton loginButton;
     private JButton closeButton;
+    private HashMap<String, String> args;
 
-    public loginFrame() {
-	// self reference
-	window = this;
+    /**
+     * loginFrame Constructor
+     * @param args command line args
+     */
+    public loginFrame(String[] args) {
+        // self reference
+        window = this;
 
-	// get content
-	content = window.getContentPane();
+        // get content
+        content = window.getContentPane();
 
-	// main windows setup
-	window.setTitle("Orbit Manager");
-	window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	window.setResizable(false);
-	window.setSize(new Dimension(350, 250));
-	window.setPreferredSize(new Dimension(350, 250));
-	window.setMaximumSize(new Dimension(350, 250));
-	window.centerScreen();
-	// icon
-	try {
-	    window.setIconImage(ImageIO.read(window.getClass().getResource("/orbit/application/resources/icons/orbit-icon-16.png")));
-	} catch (Exception e) {
-	    // nothing to do
-	}
+        // main windows setup
+        window.setTitle("Orbit Manager");
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setSize(new Dimension(350, 250));
+        window.setPreferredSize(new Dimension(350, 250));
+        window.setMaximumSize(new Dimension(350, 250));
+        window.centerScreen();
+        // icon
+        try {
+            window.setIconImage(ImageIO.read(window.getClass().getResource("/orbit/application/resources/icons/orbit-icon-16.png")));
+        } catch (Exception e) {
+            // nothing to do
+        }
 
-	// gui
-	window.createGUI();
-	window.attachEvents();
-	window.restoreSession();
+        // gui
+        window.createGUI();
+        window.attachEvents();
+        window.restoreSession();
 
-	// focus password if needed
-	if (!serverText.getText().isEmpty()) {
-	    if (!loginText.getText().isEmpty()) {
-		window.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy() {
+        // argument parser
+        this.args = new HashMap<String, String>();
+        this.args.put("interface", "advance");
 
-		    @Override
-		    public Component getFirstComponent(Container aContainer) {
-			return passwordText;
-		    }
-		});
+        for (String opt : args) {
+            if (opt.startsWith("--interface")) {
+                this.args.put("interface", opt.substring(opt.indexOf("=") + 1));
+            }
+        }
 
-	    }
-	}
     }
 
     /**
      * Center on screen
      */
     public void centerScreen() {
-	Dimension dim = getToolkit().getScreenSize();
-	Rectangle abounds = getBounds();
-	window.setLocation(
-		(dim.width - abounds.width) / 2,
-		(dim.height - abounds.height) / 2);
-	window.requestFocusInWindow();
+        Dimension dim = getToolkit().getScreenSize();
+        Rectangle abounds = getBounds();
+        window.setLocation(
+                (dim.width - abounds.width) / 2,
+                (dim.height - abounds.height) / 2);
+        window.requestFocusInWindow();
     }
 
     /**
      * Attach events to components
      */
     public void attachEvents() {
-	new closeButtonClick(closeButton);
-	new loginButtonClick(loginButton);
+        new closeButtonClick(closeButton);
+        new loginButtonClick(loginButton);
     }
 
     /**
      * Store Session
      */
     public void storeSession() {
-	// locals
-	Properties config = new Properties();
+        // locals
+        Properties config = new Properties();
 
-	try {
-	    // load
-	    if (new File("orbit.properties").exists()) {
-		config.load(new FileInputStream("orbit.properties"));
-	    }
+        try {
+            // load
+            if (new File("orbit.properties").exists()) {
+                config.load(new FileInputStream("orbit.properties"));
+            }
 
-	    // set recent server/user
-	    config.setProperty("recent.server", serverText.getText());
-	    config.setProperty("recent.login", loginText.getText());
+            // set recent server/user
+            config.setProperty("recent.server", serverText.getText());
+            config.setProperty("recent.login", loginText.getText());
 
-	    // save file
-	    config.store(new FileOutputStream("orbit.properties"), null);
-	} catch (IOException e) {
-	    // we gave it our best
-	}
+            // save file
+            config.store(new FileOutputStream("orbit.properties"), null);
+        } catch (IOException e) {
+            // we gave it our best
+        }
     }
 
     /**
      * Restore Session
      */
     public void restoreSession() {
-	// locals
-	Properties config = new Properties();
+        // locals
+        Properties config = new Properties();
 
-	try {
-	    // load
-	    if (new File("orbit.properties").exists()) {
-		config.load(new FileInputStream("orbit.properties"));
-	    }
+        try {
+            // load
+            if (new File("orbit.properties").exists()) {
+                config.load(new FileInputStream("orbit.properties"));
+            }
 
-	    // set recent server/user
-	    serverText.setText(config.getProperty("recent.server", ""));
-	    loginText.setText(config.getProperty("recent.login", "root"));
+            // set recent server/user
+            serverText.setText(config.getProperty("recent.server", ""));
+            loginText.setText(config.getProperty("recent.login", "root"));
 
-	} catch (IOException e) {
-	    // we gave it our best
-	}
+        } catch (IOException e) {
+            // we gave it our best
+        }
+
+        // focus password if needed
+        if (!serverText.getText().isEmpty()) {
+            if (!loginText.getText().isEmpty()) {
+                window.setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy() {
+
+                    @Override
+                    public Component getFirstComponent(Container aContainer) {
+                        return passwordText;
+                    }
+                });
+
+            }
+        }
     }
 
     /**
      * Create GUI
      */
     public void createGUI() {
-	// locals
-	JPanel formPanels[], serverPanel, loginPanel,
-		passwordPanel, buttonPanel, statusPanel;
+        // locals
+        JPanel formPanels[], serverPanel, loginPanel,
+                passwordPanel, buttonPanel, statusPanel;
 
-	// layout
-	content.setLayout(new BorderLayout(0, 0));
+        // layout
+        content.setLayout(new BorderLayout(0, 0));
 
-	// header
-	headerLabel = new JLabel();
-	headerLabel.setPreferredSize(new Dimension(350, 75));
-	try {
-	    headerLabel.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/header.png")));
-	} catch (Exception e) {
-	    headerLabel.setBackground(Color.DARK_GRAY);
-	    headerLabel.setOpaque(true);
-	}
-	content.add(headerLabel, BorderLayout.NORTH);
+        // header
+        headerLabel = new JLabel();
+        headerLabel.setPreferredSize(new Dimension(350, 75));
+        try {
+            headerLabel.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/header.png")));
+        } catch (Exception e) {
+            headerLabel.setBackground(Color.DARK_GRAY);
+            headerLabel.setOpaque(true);
+        }
+        content.add(headerLabel, BorderLayout.NORTH);
 
-	// main
-	formPanels = new JPanel[3];
-	for (int i = 0; i < formPanels.length; i++) {
-	    formPanels[i] = new JPanel();
-	    formPanels[i].setLayout(new BorderLayout());
-	    if (i > 0) {
-		formPanels[(i - 1)].add(formPanels[i], BorderLayout.CENTER);
-	    }
-	}
+        // main
+        formPanels = new JPanel[3];
+        for (int i = 0; i < formPanels.length; i++) {
+            formPanels[i] = new JPanel();
+            formPanels[i].setLayout(new BorderLayout());
+            if (i > 0) {
+                formPanels[(i - 1)].add(formPanels[i], BorderLayout.CENTER);
+            }
+        }
 
-	formPanels[0].setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-	content.add(formPanels[0], BorderLayout.CENTER);
+        formPanels[0].setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        content.add(formPanels[0], BorderLayout.CENTER);
 
-	// form - initilization
-	serverPanel = new JPanel();
-	serverText = new JTextField();
-	loginPanel = new JPanel();
-	loginText = new JTextField();
-	passwordPanel = new JPanel();
-	passwordText = new JPasswordField();
-	buttonPanel = new JPanel();
-	loginButton = new JButton();
-	closeButton = new JButton();
-	statusPanel = new JPanel();
-	statusLabel = new JLabel();
+        // form - initilization
+        serverPanel = new JPanel();
+        serverText = new JTextField();
+        loginPanel = new JPanel();
+        loginText = new JTextField();
+        passwordPanel = new JPanel();
+        passwordText = new JPasswordField();
+        buttonPanel = new JPanel();
+        loginButton = new JButton();
+        closeButton = new JButton();
+        statusPanel = new JPanel();
+        statusLabel = new JLabel();
 
-	formLabels = new JLabel[3];
-	for (int i = 0; i < formLabels.length; i++) {
-	    formLabels[i] = new JLabel();
-	    formLabels[i].setPreferredSize(new Dimension(70, 20));
-	}
+        formLabels = new JLabel[3];
+        for (int i = 0; i < formLabels.length; i++) {
+            formLabels[i] = new JLabel();
+            formLabels[i].setPreferredSize(new Dimension(70, 20));
+        }
 
-	// form - set labels
-	formLabels[0].setText("Server:");
-	formLabels[1].setText("Login:");
-	formLabels[2].setText("Password:");
+        // form - set labels
+        formLabels[0].setText("Server:");
+        formLabels[1].setText("Login:");
+        formLabels[2].setText("Password:");
 
-	// form - input
-	formPanels[0].add(serverPanel, BorderLayout.NORTH);
-	serverPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
-	serverPanel.setLayout(new BorderLayout());
-	formLabels[0].setLabelFor(serverText);
-	serverPanel.add(formLabels[0], BorderLayout.WEST);
-	serverPanel.add(serverText, BorderLayout.CENTER);
+        // form - input
+        formPanels[0].add(serverPanel, BorderLayout.NORTH);
+        serverPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
+        serverPanel.setLayout(new BorderLayout());
+        formLabels[0].setLabelFor(serverText);
+        serverPanel.add(formLabels[0], BorderLayout.WEST);
+        serverPanel.add(serverText, BorderLayout.CENTER);
 
-	formPanels[1].add(loginPanel, BorderLayout.NORTH);
-	loginText.setText("root");
-	loginPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
-	loginPanel.setLayout(new BorderLayout());
-	formLabels[1].setLabelFor(loginText);
-	loginPanel.add(formLabels[1], BorderLayout.WEST);
-	loginPanel.add(loginText, BorderLayout.CENTER);
+        formPanels[1].add(loginPanel, BorderLayout.NORTH);
+        loginText.setText("root");
+        loginPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
+        loginPanel.setLayout(new BorderLayout());
+        formLabels[1].setLabelFor(loginText);
+        loginPanel.add(formLabels[1], BorderLayout.WEST);
+        loginPanel.add(loginText, BorderLayout.CENTER);
 
-	formPanels[2].add(passwordPanel, BorderLayout.NORTH);
-	passwordPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
-	passwordPanel.setLayout(new BorderLayout());
-	formLabels[2].setLabelFor(passwordText);
-	passwordPanel.add(formLabels[2], BorderLayout.WEST);
-	passwordPanel.add(passwordText, BorderLayout.CENTER);
+        formPanels[2].add(passwordPanel, BorderLayout.NORTH);
+        passwordPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
+        passwordPanel.setLayout(new BorderLayout());
+        formLabels[2].setLabelFor(passwordText);
+        passwordPanel.add(formLabels[2], BorderLayout.WEST);
+        passwordPanel.add(passwordText, BorderLayout.CENTER);
 
-	// form - statusbar
-	content.add(statusPanel, BorderLayout.SOUTH);
-	statusPanel.setLayout(new BorderLayout());
-	statusPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-	statusPanel.setPreferredSize(new Dimension(350, 30));
-	statusPanel.add(statusLabel, BorderLayout.CENTER);
+        // form - statusbar
+        content.add(statusPanel, BorderLayout.SOUTH);
+        statusPanel.setLayout(new BorderLayout());
+        statusPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
+        statusPanel.setPreferredSize(new Dimension(350, 30));
+        statusPanel.add(statusLabel, BorderLayout.CENTER);
 
-	// form - buttons
-	statusPanel.add(buttonPanel, BorderLayout.EAST);
-	buttonPanel.setLayout(new GridLayout(1, 2));
-	buttonPanel.setPreferredSize(new Dimension(170, 20));
-	buttonPanel.add(loginButton);
-	buttonPanel.add(closeButton);
+        // form - buttons
+        statusPanel.add(buttonPanel, BorderLayout.EAST);
+        buttonPanel.setLayout(new GridLayout(1, 2));
+        buttonPanel.setPreferredSize(new Dimension(170, 20));
+        buttonPanel.add(loginButton);
+        buttonPanel.add(closeButton);
 
-	window.getRootPane().setDefaultButton(loginButton);
-	loginButton.setText("Login");
-	closeButton.setText("Close");
+        window.getRootPane().setDefaultButton(loginButton);
+        loginButton.setText("Login");
+        closeButton.setText("Close");
 
     }
 
@@ -249,13 +266,13 @@ public class loginFrame extends JFrame {
      */
     class closeButtonClick implements ActionListener {
 
-	public closeButtonClick(JButton button) {
-	    button.addActionListener(this);
-	}
+        public closeButtonClick(JButton button) {
+            button.addActionListener(this);
+        }
 
-	public void actionPerformed(ActionEvent e) {
-	    System.exit(0);
-	}
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
     }
 
     /**
@@ -264,23 +281,23 @@ public class loginFrame extends JFrame {
      */
     class loginButtonClick implements ActionListener {
 
-	public loginButtonClick(JButton button) {
-	    button.addActionListener(this);
-	}
+        public loginButtonClick(JButton button) {
+            button.addActionListener(this);
+        }
 
-	public void actionPerformed(ActionEvent e) {
-	    // disable button
-	    loginButton.setEnabled(false);
-	    loginButton.repaint();
+        public void actionPerformed(ActionEvent e) {
+            // disable button
+            loginButton.setEnabled(false);
+            loginButton.repaint();
 
-	    // setup connection
-	    ServerConnector sc = new ServerConnector(
-		    serverText.getText(),
-		    loginText.getText(),
-		    new String(passwordText.getPassword()));
-	    sc.start();
+            // setup connection
+            ServerConnector sc = new ServerConnector(
+                    serverText.getText(),
+                    loginText.getText(),
+                    new String(passwordText.getPassword()));
+            sc.start();
 
-	}
+        }
     }
 
     /**
@@ -288,96 +305,103 @@ public class loginFrame extends JFrame {
      */
     class ServerConnector extends Thread {
 
-	// variables
-	private boolean valid = true;
-	private URL urlServer = null;
-	private String stringUser, stringPassword;
-	private ServiceInstance si = null;
+        // variables
+        private boolean valid = true;
+        private URL urlServer = null;
+        private String stringUser, stringPassword;
+        private ServiceInstance si = null;
 
-	ServerConnector(String url, String user, String password) {
-	    // status
-	    this.statusMessage("Connecting ...", "processing");
+        ServerConnector(String url, String user, String password) {
+            // status
+            this.statusMessage("Connecting...", "processing");
 
-	    // store variables
-	    this.stringUser = user;
-	    this.stringPassword = password;
-	    if (!url.isEmpty()) {
-		try {
-		    if (url.endsWith("/sdk")) { // allow for full url entry
-			urlServer = new URL(url);
-		    } else {
-			urlServer = new URL("https://" + url + "/sdk");
-		    }
-		} catch (java.net.MalformedURLException mue) {
-		    valid = false;
-		    this.statusMessage("Invalid server name!", "error");
+            // store variables
+            this.stringUser = user;
+            this.stringPassword = password;
+            if (!url.isEmpty()) {
+                try {
+                    if (url.endsWith("/sdk")) { // allow for full url entry
+                        urlServer = new URL(url);
+                    } else {
+                        urlServer = new URL("https://" + url + "/sdk");
+                    }
+                } catch (java.net.MalformedURLException mue) {
+                    valid = false;
+                    this.statusMessage("Invalid server name!", "error");
                     serverText.requestFocusInWindow();
-		}
-	    } else {
-		valid = false;
-		this.statusMessage("Enter server name.", "alert");
+                }
+            } else {
+                valid = false;
+                this.statusMessage("Enter server name.", "alert");
                 serverText.requestFocusInWindow();
-	    }
+            }
 
-	    if (valid && stringUser.isEmpty()) {
-		valid = false;
-		this.statusMessage("Please enter login.", "alert");
+            if (valid && stringUser.isEmpty()) {
+                valid = false;
+                this.statusMessage("Please enter login.", "alert");
                 loginText.requestFocusInWindow();
-	    }
+            }
 
-	}
+        }
 
-	public void statusMessage(String msg) {
-	    this.statusMessage(msg, null);
-	}
+        public void statusMessage(String msg) {
+            this.statusMessage(msg, null);
+        }
 
-	public void statusMessage(String msg, String icon) {
-	    statusLabel.setText(msg);
-	    if (icon == null || icon.isEmpty()) {
-		statusLabel.setIcon(null);
-	    } else {
-		try {
-		    statusLabel.setIcon(new ImageIcon(window.getClass().getResource(String.format("/orbit/application/resources/statusbar/%s.gif", icon))));
-		} catch (Exception e) {
-		    statusLabel.setIcon(null);
-		}
-	    }
+        public void statusMessage(String msg, String icon) {
+            statusLabel.setText(msg);
+            if (icon == null || icon.isEmpty()) {
+                statusLabel.setIcon(null);
+            } else {
+                try {
+                    statusLabel.setIcon(new ImageIcon(window.getClass().getResource(String.format("/orbit/application/resources/statusbar/%s.gif", icon))));
+                } catch (Exception e) {
+                    statusLabel.setIcon(null);
+                }
+            }
 
-	    statusLabel.repaint();
-	}
+            statusLabel.repaint();
+        }
 
-	public void run() {
-	    // connect
-	    if (valid) {
-		try {
-		    si = new ServiceInstance(urlServer, stringUser, stringPassword, true);
-		} catch (com.vmware.vim25.InvalidLogin il) {
-		    valid = false;
-		    this.statusMessage("Invalid login!", "alert");
-		    passwordText.requestFocusInWindow();
-		} catch (Exception ex) {
-		    valid = false;
-		    this.statusMessage("Connection failed!", "error");
-		} finally {
-		    if (si != null) {
-			window.storeSession();
-			this.statusMessage("Connected!", "ok");
-			//TODO: if valid, show form
-		    }
-		}
-	    }
+        public void run() {
+            // connect
+            if (valid) {
+                try {
+                    si = new ServiceInstance(urlServer, stringUser, stringPassword, true);
+                } catch (com.vmware.vim25.InvalidLogin il) {
+                    valid = false;
+                    this.statusMessage("Invalid login!", "alert");
+                    passwordText.requestFocusInWindow();
+                } catch (Exception ex) {
+                    valid = false;
+                    this.statusMessage("Connection failed!", "error");
+                } finally {
+                    if (si != null) {
+                        window.storeSession();
+                        this.statusMessage("Connected!", "ok");
 
-	    // clean status
-	    if (!valid) {
-		loginButton.setEnabled(true);
-	    }
-	    loginButton.repaint();
-	    try {
-		sleep(2500);
-	    } catch (Exception ex) {
-	    } finally {
-		this.statusMessage("");
-	    }
-	}
+                        // open manager frame
+                        JFrame managerWindow = ( 
+                                (args.get("interface").equalsIgnoreCase("simple")) ?
+                                    new simpleFrame(si) :
+                                    new advanceFrame(serverText.getText(), si) );
+                        managerWindow.setVisible(true);
+                        window.dispose();
+                    }
+                }
+            }
+
+            // clean status
+            if (!valid) {
+                loginButton.setEnabled(true);
+            }
+            loginButton.repaint();
+            try {
+                sleep(2500);
+            } catch (Exception ex) {
+            } finally {
+                this.statusMessage("");
+            }
+        }
     }
 }
