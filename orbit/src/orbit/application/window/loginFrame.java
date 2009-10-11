@@ -9,14 +9,17 @@ package orbit.application.window;
  */
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.*;
 import java.lang.*;
+import java.io.*;
+import javax.imageio.*;
 import javax.swing.*;
 
 // vijava
 import java.net.*;
+import java.rmi.*;
 import com.vmware.vim25.*;
 import com.vmware.vim25.mo.*;
-import java.rmi.RemoteException;
 
 public class loginFrame extends JFrame {
     // variables
@@ -42,12 +45,17 @@ public class loginFrame extends JFrame {
         // main windows setup
         window.setTitle("Orbit Manager");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //TODO: icon (somehow get the resources in orbit.application.resources
         window.setResizable(false);
         window.setSize(new Dimension(350, 250));
         window.setPreferredSize(new Dimension(350, 250));
         window.setMaximumSize(new Dimension(350, 250));
         window.centerScreen();
+        // icon
+        try {
+            window.setIconImage(ImageIO.read(window.getClass().getResource("/orbit/application/resources/icons/orbit-icon-16.png")));
+        } catch (Exception e) {
+            // nothing to do
+        } 
 
         // gui
         window.createGUI();
@@ -180,7 +188,7 @@ public class loginFrame extends JFrame {
         buttonPanel.setPreferredSize(new Dimension(170, 20));
         buttonPanel.add(loginButton);
         buttonPanel.add(closeButton);
-        
+
         loginButton.setText("Login");
         closeButton.setText("Close");
 
