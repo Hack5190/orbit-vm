@@ -33,13 +33,13 @@ public class loginFrame extends JFrame {
     private JPasswordField passwordText;
     private JButton loginButton;
     private JButton closeButton;
-    private HashMap<String, String> args;
+    private Properties config;
 
     /**
      * loginFrame Constructor
      * @param args command line args
      */
-    public loginFrame(String[] args) {
+    public loginFrame() {
         // self reference
         window = this;
 
@@ -61,20 +61,13 @@ public class loginFrame extends JFrame {
             // nothing to do
         }
 
+        // configuration
+        config = readConfiguration();
+
         // gui
         window.createGUI();
         window.attachEvents();
         window.restoreSession();
-
-        // argument parser
-        this.args = new HashMap<String, String>();
-        this.args.put("interface", "advance");
-
-        for (String opt : args) {
-            if (opt.startsWith("--interface")) {
-                this.args.put("interface", opt.substring(opt.indexOf("=") + 1));
-            }
-        }
 
     }
 
@@ -98,10 +91,7 @@ public class loginFrame extends JFrame {
         new loginButtonClick(loginButton);
     }
 
-    /**
-     * Store Session
-     */
-    public void storeSession() {
+    public Properties readConfiguration() {
         // locals
         Properties config = new Properties();
 
@@ -110,7 +100,17 @@ public class loginFrame extends JFrame {
             if (new File("orbit.properties").exists()) {
                 config.load(new FileInputStream("orbit.properties"));
             }
+        } catch (Exception e) {
+        }
+        
+        return config;
+    }
 
+    /**
+     * Store Session
+     */
+    public void storeSession() {
+        try {
             // set recent server/user
             config.setProperty("recent.server", serverText.getText());
             config.setProperty("recent.login", loginText.getText());
@@ -126,22 +126,9 @@ public class loginFrame extends JFrame {
      * Restore Session
      */
     public void restoreSession() {
-        // locals
-        Properties config = new Properties();
-
-        try {
-            // load
-            if (new File("orbit.properties").exists()) {
-                config.load(new FileInputStream("orbit.properties"));
-            }
-
-            // set recent server/user
-            serverText.setText(config.getProperty("recent.server", ""));
-            loginText.setText(config.getProperty("recent.login", "root"));
-
-        } catch (IOException e) {
-            // we gave it our best
-        }
+        // set recent server/user
+        serverText.setText(config.getProperty("recent.server", ""));
+        loginText.setText(config.getProperty("recent.login", "root"));
 
         // focus password if needed
         if (!serverText.getText().isEmpty()) {
@@ -381,10 +368,7 @@ public class loginFrame extends JFrame {
                         this.statusMessage("Connected!", "ok");
 
                         // open manager frame
-                        JFrame managerWindow = ( 
-                                (args.get("interface").equalsIgnoreCase("simple")) ?
-                                    new simpleFrame(si) :
-                                    new advanceFrame(serverText.getText(), si) );
+                        JFrame managerWindow = ((config.getProperty("interface", "manager").equalsIgnoreCase("controller")) ? new controllerFrame(si) : new managerFrame(serverText.getText(), si));
                         managerWindow.setVisible(true);
                         window.dispose();
                     }

@@ -27,7 +27,7 @@ public class Main {
         } catch (Exception e) { /* do nothing */ }
         
         // create login window
-        JFrame loginWindow = new loginFrame(args);
+        JFrame loginWindow = new loginFrame();
         loginWindow.setVisible(true);
 
     }
