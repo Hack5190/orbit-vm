@@ -1,7 +1,7 @@
 package orbit.application.window;
 
 /**
- * Advance Mangement Interface
+ * Simple VM Controller
  * @author sjorge
  */
 /**
@@ -20,18 +20,18 @@ import java.net.*;
 import com.vmware.vim25.*;
 import com.vmware.vim25.mo.*;
 
-public class advanceFrame extends JFrame {
+public class controllerFrame extends JFrame {
 
     // variables
     private ServiceInstance si;
-    private advanceFrame window;
+    private controllerFrame window;
     private Container content;
 
     /**
-     * advanceFrame Constructor
+     * controllerFrame Constructor
      * @param si ServiceInstance
      */
-    public advanceFrame(String name, ServiceInstance si) {
+    public controllerFrame(ServiceInstance si) {
         // self reference
         window = this;
 
@@ -39,12 +39,12 @@ public class advanceFrame extends JFrame {
         content = window.getContentPane();
 
         // main windows setup
-        window.setTitle(String.format("Orbit Manager (%s)", name));
+        window.setTitle("Orbit Manager");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(true);
-        window.setSize(new Dimension(750, 500));
-        window.setPreferredSize(new Dimension(750, 500));
-        //TODO: maximize on open (also check into mac/linux)
+        window.setResizable(false);
+        window.setSize(new Dimension(300, 150));
+        window.setPreferredSize(new Dimension(300, 150));
+        window.setMaximumSize(new Dimension(300, 150));
         window.centerScreen();
         // icon
         try {
@@ -75,12 +75,26 @@ public class advanceFrame extends JFrame {
      * Attach events to components
      */
     public void attachEvents() {
+
     }
 
     /**
      * Create GUI
      */
     public void createGUI() {
-        //TODO: advance management gui
+        //TODO: simple gui
+        /**
+         * ---------------------
+         * Host: <dropdown> - summery memory/cpu usage
+         * ---------------------
+         * Virtual Machine: <dropdown>
+         * Status: Running
+         * CPU: xxxmhz
+         * MEM: xxxMB
+         * Networking: ip, ip, ip
+         * Tools: installed/unmaged/not running
+         * ---------------------
+         * <button start> <button shutdown/power.off> <button reset>
+         */
     }
 }

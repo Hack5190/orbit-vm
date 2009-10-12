@@ -1,7 +1,7 @@
 package orbit.application.window;
 
 /**
- * Simple VM Controller
+ * Advance Mangement Interface
  * @author sjorge
  */
 /**
@@ -20,18 +20,18 @@ import java.net.*;
 import com.vmware.vim25.*;
 import com.vmware.vim25.mo.*;
 
-public class simpleFrame extends JFrame {
+public class managerFrame extends JFrame {
 
     // variables
     private ServiceInstance si;
-    private simpleFrame window;
+    private managerFrame window;
     private Container content;
 
     /**
-     * simpleFrame Constructor
+     * managerFrame Constructor
      * @param si ServiceInstance
      */
-    public simpleFrame(ServiceInstance si) {
+    public managerFrame(String name, ServiceInstance si) {
         // self reference
         window = this;
 
@@ -39,12 +39,12 @@ public class simpleFrame extends JFrame {
         content = window.getContentPane();
 
         // main windows setup
-        window.setTitle("Orbit Manager");
+        window.setTitle(String.format("Orbit Manager (%s)", name));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false);
-        window.setSize(new Dimension(300, 150));
-        window.setPreferredSize(new Dimension(300, 150));
-        window.setMaximumSize(new Dimension(300, 150));
+        window.setResizable(true);
+        window.setSize(new Dimension(750, 500));
+        window.setPreferredSize(new Dimension(750, 500));
+        //TODO: maximize on open (also check into mac/linux)
         window.centerScreen();
         // icon
         try {
@@ -75,26 +75,12 @@ public class simpleFrame extends JFrame {
      * Attach events to components
      */
     public void attachEvents() {
-
     }
 
     /**
      * Create GUI
      */
     public void createGUI() {
-        //TODO: simple gui
-        /**
-         * ---------------------
-         * Host: <dropdown> - summery memory/cpu usage
-         * ---------------------
-         * Virtual Machine: <dropdown>
-         * Status: Running
-         * CPU: xxxmhz
-         * MEM: xxxMB
-         * Networking: ip, ip, ip
-         * Tools: installed/unmaged/not running
-         * ---------------------
-         * <button start> <button shutdown/power.off> <button reset>
-         */
+        //TODO: advance management gui
     }
 }
