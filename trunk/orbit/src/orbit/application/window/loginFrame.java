@@ -25,6 +25,7 @@ public class loginFrame extends JFrame {
     // variables
     private loginFrame window;
     private Container content;
+    private Properties config;
     private JLabel headerLabel;
     private JLabel statusLabel;
     private JLabel[] formLabels;
@@ -33,7 +34,6 @@ public class loginFrame extends JFrame {
     private JPasswordField passwordText;
     private JButton loginButton;
     private JButton closeButton;
-    private Properties config;
 
     /**
      * loginFrame Constructor
@@ -368,7 +368,7 @@ public class loginFrame extends JFrame {
                         this.statusMessage("Connected!", "ok");
 
                         // open manager frame
-                        JFrame managerWindow = ((config.getProperty("interface", "manager").equalsIgnoreCase("controller")) ? new controllerFrame(si) : new managerFrame(serverText.getText(), si));
+                        JFrame managerWindow = ((config.getProperty("interface", "manager").equalsIgnoreCase("controller")) ? new controllerFrame(si, config) : new managerFrame(si, config));
                         managerWindow.setVisible(true);
                         window.dispose();
                     }
