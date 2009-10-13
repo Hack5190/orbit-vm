@@ -1,0 +1,17 @@
+Welcome curious user! You've found a hidden README file!
+
+The following properties can be added or change in orbit.properties:
+
+# interface
+# values = (controller|manager)
+## controller (default) -> simple vm controller
+## manager -> replacement for vsphere client
+interface=controller
+# close.action
+# values = (login|close)
+## login -> show login dialog on closing main window
+## close (default) -> close on closing main window
+close.action=login
+# recent user/server - auto updated on successful login
+recent.login=root
+recent.server=apollo.virtual.blackdot.be
