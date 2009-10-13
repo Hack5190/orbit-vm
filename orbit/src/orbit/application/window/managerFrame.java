@@ -42,7 +42,22 @@ public class managerFrame extends JFrame {
 
         // main windows setup
         window.setTitle(String.format("Orbit Manager (%s)", config.getProperty("recent.server", "unknown")));
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	window.addWindowListener(new WindowAdapter() {
+
+	    public void windowClosing(WindowEvent w) {
+		if (config.getProperty("close.action", "close").equals("login")) {
+		    // create login window
+		    JFrame loginWindow = new loginFrame();
+		    loginWindow.setVisible(true);
+
+		    // dispose this window
+		    window.dispose();
+		} else {
+		    System.exit(0);
+		}
+	    }
+	});
         window.setResizable(true);
         window.setSize(new Dimension(750, 500));
         window.setPreferredSize(new Dimension(750, 500));
