@@ -27,6 +27,7 @@ public class controllerFrame extends JFrame {
     private controllerFrame window;
     private Container content;
     private Properties config;
+    private VirtualMachine[] virtualMachines;
     private JComboBox virtualMachineCombo;
     private JButton vmSearchButton;
     private JButton[] vmControlButtons;
@@ -77,10 +78,12 @@ public class controllerFrame extends JFrame {
             // nothing to do
         }
 
+        // collect virtual machines
+        virtualMachines = window.getVirtualMachines();
+
         // gui
         window.createGUI();
         window.attachEvents();
-        window.getVirtualMachines();
     }
 
     /**
@@ -110,6 +113,7 @@ public class controllerFrame extends JFrame {
         JLabel[] formLabels;
         String[] vmSearchButtonsText = {"Start", "Stop", "Reset"};
 
+        //TODO: fill combo and disable on no vm's
         //TODO: create smaller header image
         //TODO: borders for correct spacing simular to loginWindow
         //TODO: infoPanel (maybe move current header into info and add header image?)
@@ -174,7 +178,7 @@ public class controllerFrame extends JFrame {
     /**
      * Get all virtual machine and update combo
      */
-    public void getVirtualMachines() {
+    public VirtualMachine[] getVirtualMachines() {
         // locals
         Folder rootFolder;
         VirtualMachine[] vms;
@@ -191,11 +195,9 @@ public class controllerFrame extends JFrame {
                 vms[i] = (VirtualMachine) mes[i];
             }
         } catch (Exception e) {
-            // TODO: handle no vms (disable form controls?)
-            return;
+            return null;
         }
 
-        //TODO: add vms to combo
-        
+        return vms;
     }
 }
