@@ -32,10 +32,11 @@ public class managerFrame extends JFrame {
      * managerFrame Constructor
      * @param si ServiceInstance
      */
-    public managerFrame(final ServiceInstance si, Properties cfg) {
+    public managerFrame(ServiceInstance serviceInstant, Properties cfg) {
         // self reference
         window = this;
 	config = cfg;
+        si = serviceInstant;
 
         // get content
         content = window.getContentPane();
