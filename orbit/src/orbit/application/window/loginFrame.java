@@ -247,6 +247,8 @@ public class loginFrame extends JFrame {
 
     }
 
+    //TODO: move close/login button click to ActionAdaptor and inline?
+
     /**
      * close button click event
      * @author sjorge
