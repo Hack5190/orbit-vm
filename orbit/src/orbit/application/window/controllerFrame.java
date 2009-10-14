@@ -179,8 +179,8 @@ public class controllerFrame extends JFrame {
         VirtualMachine[] vms;
 
         // get rootFolder and look for vm's
-        rootFolder = si.getRootFolder();
         try {
+            rootFolder = si.getRootFolder();
             ManagedEntity[] mes = new InventoryNavigator(rootFolder).searchManagedEntities("VirtualMachine");
             if (mes == null || mes.length == 0) {
                 throw new NullPointerException();
