@@ -32,7 +32,7 @@ public class managerFrame extends JFrame {
      * managerFrame Constructor
      * @param si ServiceInstance
      */
-    public managerFrame(ServiceInstance si, Properties cfg) {
+    public managerFrame(final ServiceInstance si, Properties cfg) {
         // self reference
         window = this;
 	config = cfg;
@@ -50,6 +50,9 @@ public class managerFrame extends JFrame {
 		    // create login window
 		    JFrame loginWindow = new loginFrame();
 		    loginWindow.setVisible(true);
+
+                    // disconnect
+                    si.getServerConnection().logout();
 
 		    // dispose this window
 		    window.dispose();

@@ -35,7 +35,7 @@ public class controllerFrame extends JFrame {
      * controllerFrame Constructor
      * @param si ServiceInstance
      */
-    public controllerFrame(ServiceInstance si, Properties cfg) {
+    public controllerFrame(final ServiceInstance si, Properties cfg) {
         // self reference
         window = this;
         config = cfg;
@@ -53,6 +53,9 @@ public class controllerFrame extends JFrame {
                     // create login window
                     JFrame loginWindow = new loginFrame();
                     loginWindow.setVisible(true);
+
+                    // disconnect
+                    si.getServerConnection().logout();
 
                     // dispose this window
                     window.dispose();
