@@ -35,10 +35,11 @@ public class controllerFrame extends JFrame {
      * controllerFrame Constructor
      * @param si ServiceInstance
      */
-    public controllerFrame(final ServiceInstance si, Properties cfg) {
+    public controllerFrame(ServiceInstance serviceInstant, Properties cfg) {
         // self reference
         window = this;
         config = cfg;
+        si = serviceInstant;
 
         // get content
         content = window.getContentPane();
