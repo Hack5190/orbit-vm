@@ -27,6 +27,9 @@ public class controllerFrame extends JFrame {
     private controllerFrame window;
     private Container content;
     private Properties config;
+    private JComboBox virtualMachineCombo;
+    private JButton vmSearchButton;
+    private JButton[] vmControlButtons;
 
     /**
      * controllerFrame Constructor
@@ -59,9 +62,9 @@ public class controllerFrame extends JFrame {
 	    }
 	});
 	window.setResizable(false);
-	window.setSize(new Dimension(300, 150));
-	window.setPreferredSize(new Dimension(300, 150));
-	window.setMaximumSize(new Dimension(300, 150));
+	window.setSize(new Dimension(450, 260));
+	window.setPreferredSize(new Dimension(450, 260));
+	window.setMaximumSize(new Dimension(450, 260));
 	window.centerScreen();
 	// icon
 	try {
@@ -98,12 +101,61 @@ public class controllerFrame extends JFrame {
      * Create GUI
      */
     public void createGUI() {
-	//TODO: simple gui
+        // locals
+        JPanel controlPanel, machinePanel, infoPanel;
+        JLabel[] formLabels;
+        String[] vmSearchButtonsText = {"Start", "Stop", "Reset"};
+
+        //TODO: create smaller header image
+        //TODO: borders for correct spacing simular to loginWindow
+        //TODO: infoPanel (maybe move current header into info and add header image?)
+
+        // layout
+        content.setLayout(new BorderLayout(0, 0));
+
+        //labels
+        formLabels = new JLabel[6];
+        for (int i = 0; i < formLabels.length; i++) {
+            formLabels[i] = new JLabel();
+        }
+
+        // header
+        machinePanel = new JPanel();
+        machinePanel.setPreferredSize(new Dimension(450, 30));
+        machinePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        content.add(machinePanel, BorderLayout.NORTH);
+
+        formLabels[0].setText("Virtual Machine:");
+        machinePanel.add(formLabels[0]);
+
+        virtualMachineCombo = new JComboBox();
+        machinePanel.add(virtualMachineCombo);
+
+        vmSearchButton = new JButton();
+        vmSearchButton.setText("Search");
+        machinePanel.add(vmSearchButton);
+
+        // main
+        infoPanel = new JPanel();
+        infoPanel.setPreferredSize(new Dimension(450, 200));
+        content.add(infoPanel, BorderLayout.CENTER);
+        
+        // footer
+        controlPanel = new JPanel();
+        controlPanel.setPreferredSize(new Dimension(450, 30));
+        controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        content.add(controlPanel, BorderLayout.SOUTH);
+
+        vmControlButtons = new JButton[3];
+        for (int i = 0; i < vmControlButtons.length; i++) {
+            vmControlButtons[i] = new JButton();
+            //TODO: replace with icons and remove temp text variable
+            vmControlButtons[i].setText(vmSearchButtonsText[i]);
+            controlPanel.add(vmControlButtons[i]);
+        }
+
 	/**
-	 * ---------------------
-	 * Host: <dropdown> - summery memory/cpu usage
-	 * ---------------------
-	 * Virtual Machine: <dropdown>
+	 * Virtual Machine: <dropdown> <button ... (for searching)>
 	 * Status: Running
 	 * CPU: xxxmhz
 	 * MEM: xxxMB
