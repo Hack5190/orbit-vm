@@ -29,7 +29,7 @@ public class controllerFrame extends JFrame {
     private Properties config;
     private VirtualMachine[] virtualMachines;
     private JComboBox virtualMachineCombo;
-    private JButton vmSearchButton;
+    private JLabel[] vmInfoLabels;
     private JButton[] vmControlButtons;
 
     /**
@@ -46,7 +46,7 @@ public class controllerFrame extends JFrame {
         content = window.getContentPane();
 
         // main windows setup
-        window.setTitle("Orbit Manager");
+        window.setTitle("Orbit Controller");
         window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         window.addWindowListener(new WindowAdapter() {
 
@@ -83,7 +83,6 @@ public class controllerFrame extends JFrame {
 
         // gui
         window.createGUI();
-        window.attachEvents();
     }
 
     /**
@@ -96,12 +95,6 @@ public class controllerFrame extends JFrame {
                 (dim.width - abounds.width) / 2,
                 (dim.height - abounds.height) / 2);
         window.requestFocusInWindow();
-    }
-
-    /**
-     * Attach events to components
-     */
-    public void attachEvents() {
     }
 
     /**
@@ -137,13 +130,11 @@ public class controllerFrame extends JFrame {
         machinePanel.add(formLabels[0]);
 
         virtualMachineCombo = new JComboBox();
+        for (VirtualMachine vm : virtualMachines) {
+            virtualMachineCombo.addItem(vm.getName());
+        }
         machinePanel.add(virtualMachineCombo);
 
-        /** not sure about this yet, do we need it?
-        vmSearchButton = new JButton();
-        vmSearchButton.setText("Search");
-        machinePanel.add(vmSearchButton);
-         */
         // main
         infoPanel = new JPanel();
         infoPanel.setPreferredSize(new Dimension(450, 200));
@@ -162,6 +153,7 @@ public class controllerFrame extends JFrame {
             vmControlButtons[i].setText(vmSearchButtonsText[i]);
             controlPanel.add(vmControlButtons[i]);
         }
+        new poweronButtonClick(vmControlButtons[0]);
 
         /**
          * Virtual Machine: <dropdown> <button ... (for searching)>
@@ -199,5 +191,41 @@ public class controllerFrame extends JFrame {
         }
 
         return vms;
+    }
+
+    /**
+     * close button click event
+     * @author sjorge
+     */
+    class poweronButtonClick implements ActionListener {
+
+        public poweronButtonClick(JButton button) {
+            button.addActionListener(this);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            // locals
+            VirtualMachine vm;
+            boolean successBool = false;
+
+            if (virtualMachineCombo.getSelectedIndex() > -1) {
+                vm = virtualMachines[virtualMachineCombo.getSelectedIndex()];
+
+
+                if (vm != null) {
+                    try {
+                        Task task = vm.powerOnVM_Task(null);
+                        if (task.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
+                            successBool = true;
+                        }
+                    } catch (Exception ex) {}
+
+                    if (successBool) {
+                        //TODO: show visually
+                    }
+
+                }
+            }
+        }
     }
 }
