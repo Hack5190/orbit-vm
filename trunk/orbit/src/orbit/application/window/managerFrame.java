@@ -46,6 +46,7 @@ public class managerFrame extends JFrame {
 	window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	window.addWindowListener(new WindowAdapter() {
 
+	    @Override
 	    public void windowClosing(WindowEvent w) {
 		if (config.getProperty("close.action", "close").equals("login")) {
 		    // create login window
