@@ -160,7 +160,7 @@ public class loginFrame extends JFrame {
         headerLabel = new JLabel();
         headerLabel.setPreferredSize(new Dimension(350, 75));
         try {
-            headerLabel.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/header.png")));
+            headerLabel.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/header-login.png")));
         } catch (Exception e) {
             headerLabel.setBackground(Color.DARK_GRAY);
             headerLabel.setOpaque(true);
