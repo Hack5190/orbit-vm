@@ -133,7 +133,7 @@ public class controllerFrame extends JFrame {
             machinePanel = new JImagePanel();
         }
         machinePanel.setPreferredSize(new Dimension(450, 35));
-        machinePanel.setBorder(BorderFactory.createEmptyBorder(2,5,0,0));
+        machinePanel.setBorder(BorderFactory.createEmptyBorder(2, 5, 0, 0));
         machinePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         machinePanel.add(formLabels[0]);
 
@@ -147,7 +147,24 @@ public class controllerFrame extends JFrame {
         // main
         infoPanel = new JPanel();
         infoPanel.setPreferredSize(new Dimension(450, 200));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        infoPanel.setLayout(new BorderLayout());
         content.add(infoPanel, BorderLayout.CENTER);
+
+        // Data
+        infoDataPanel = new JPanel[formLabels.length];
+        for (int i = 0; i < infoDataPanel.length; i++) {
+            infoDataPanel[i] = new JPanel();
+            infoDataPanel[i].setLayout(new BorderLayout());
+            infoDataPanel[i].setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
+            if (i < (infoDataPanel.length - 1)) {
+                formLabels[(i + 1)].setPreferredSize(new Dimension(70, 20));
+                infoDataPanel[i].add(formLabels[(i + 1)], BorderLayout.WEST);
+            }
+            ((i == 0) ? infoPanel : infoDataPanel[(i - 1)]).add(
+                    infoDataPanel[i],
+                    ((i < (infoDataPanel.length - 1)) ? BorderLayout.NORTH : BorderLayout.CENTER));
+        }
 
         // footer
         controlPanel = new JPanel();
