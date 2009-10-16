@@ -111,7 +111,7 @@ public class controllerFrame extends JFrame {
         String vmSearchButtonsText[] = {"Start", "Stop", "Reset"}; //TODO: remove this
 
         //TODO: disable on no vm's
-        //TODO: infoPanel (maybe move current header into info and add header image?)
+        //TODO: auto refresh every 3 sec
 
         // layout
         content.setLayout(new BorderLayout(0, 0));
@@ -182,17 +182,8 @@ public class controllerFrame extends JFrame {
         controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         content.add(controlPanel, BorderLayout.SOUTH);
 
-        /*
-        vmControlButtons = new JButton[3];
-        for (int i = 0; i < vmControlButtons.length; i++) {
-        vmControlButtons[i] = new JButton();
-        //TODO: replace with icons and remove temp text variable
-        vmControlButtons[i].setText(vmSearchButtonsText[i]);
-        controlPanel.add(vmControlButtons[i]);
-        }
-        new poweronButtonClick(vmControlButtons[0]);
-         */
 
+        // load data
         showVM(virtualMachines[virtualMachineCombo.getSelectedIndex()]);
     }
 
@@ -229,11 +220,13 @@ public class controllerFrame extends JFrame {
     public void showVM(VirtualMachine vm) {
         // local
         Folder rootFolder;
-        VirtualMachinePowerState powerState;
         HostSystem host;
+        VirtualMachinePowerState powerState;
+        GuestInfo guestInfo;
 
         // get data
         powerState = vm.getRuntime().getPowerState();
+        guestInfo = vm.getGuest();
 
         try {
             // locals
@@ -257,18 +250,17 @@ public class controllerFrame extends JFrame {
         }
 
         // host
-        formLabels[1][1].setText(( (host == null) ? "unknown" : host.getName() ));
-
+        formLabels[1][1].setText(((host == null) ? "unknown" : host.getName()));
 
         // powerState
         if (powerState == VirtualMachinePowerState.poweredOn) {
-            formLabels[2][1].setText("Powered On");
+            formLabels[2][1].setText("powered on");
             formLabels[2][1].setForeground(Color.blue);
         } else if (powerState == VirtualMachinePowerState.suspended) {
-            formLabels[2][1].setText("Suspended");
-            formLabels[2][1].setForeground(Color.orange);
+            formLabels[2][1].setText("suspended");
+            formLabels[2][1].setForeground(Color.yellow);
         } else {
-            formLabels[2][1].setText("Powered Off");
+            formLabels[2][1].setText("powered off");
             formLabels[2][1].setForeground(Color.red);
         }
 
@@ -276,7 +268,29 @@ public class controllerFrame extends JFrame {
         formLabels[3][1].setText("cpu");
         formLabels[4][1].setText("mem");
         formLabels[5][1].setText("network");
-        formLabels[6][1].setText("tools");
+
+        // tools information
+        if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsNotInstalled) {
+            formLabels[6][1].setText("not installed");
+            formLabels[6][1].setForeground(Color.orange);
+        } else if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsNotRunning) {
+            formLabels[6][1].setText("not running");
+            formLabels[6][1].setForeground(Color.red);
+        } else if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsOld) {
+            formLabels[6][1].setText("running, needs upgrade");
+            formLabels[6][1].setForeground(Color.yellow);
+        } else if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+            if (guestInfo.getToolsVersionStatus().equals("guestToolsUnmanaged")) {
+                formLabels[6][1].setText("running, unmanaged");
+            } else {
+                formLabels[6][1].setText("running");
+            }
+            formLabels[6][1].setForeground(Color.blue);
+        } else {
+            formLabels[6][1].setText("unknown");
+            formLabels[6][1].setForeground(null);
+        }
+
     }
 
     /**
