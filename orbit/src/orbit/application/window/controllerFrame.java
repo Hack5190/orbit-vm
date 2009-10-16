@@ -20,6 +20,9 @@ import java.net.*;
 import com.vmware.vim25.*;
 import com.vmware.vim25.mo.*;
 
+// orbit
+import orbit.component.*;
+
 public class controllerFrame extends JFrame {
 
     // variables
@@ -50,7 +53,7 @@ public class controllerFrame extends JFrame {
         window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         window.addWindowListener(new WindowAdapter() {
 
-	    @Override
+            @Override
             public void windowClosing(WindowEvent w) {
                 if (config.getProperty("close.action", "close").equals("login")) {
                     // create login window
@@ -103,13 +106,14 @@ public class controllerFrame extends JFrame {
      */
     public void createGUI() {
         // locals
-        JPanel controlPanel, machinePanel, infoPanel;
+        JImagePanel machinePanel;
+        JPanel controlPanel, infoPanel;
+        JPanel[] infoDataPanel;
         JLabel[] formLabels;
+        String[] labelsText = {"Virtual Machine:", "Stauts:", "CPU:", "Mem:", "Network:", "Tools:"};
         String[] vmSearchButtonsText = {"Start", "Stop", "Reset"};
 
-        //TODO: fill combo and disable on no vm's
-        //TODO: create smaller header image
-        //TODO: borders for correct spacing simular to loginWindow
+        //TODO: disable on no vm's
         //TODO: infoPanel (maybe move current header into info and add header image?)
 
         // layout
@@ -119,15 +123,18 @@ public class controllerFrame extends JFrame {
         formLabels = new JLabel[6];
         for (int i = 0; i < formLabels.length; i++) {
             formLabels[i] = new JLabel();
+            formLabels[i].setText(labelsText[i]);
         }
 
         // header
-        machinePanel = new JPanel();
-        machinePanel.setPreferredSize(new Dimension(450, 30));
+        try {
+            machinePanel = new JImagePanel(ImageIO.read(window.getClass().getResource("/orbit/application/resources/header-controller.png")));
+        } catch (IOException ioe) {
+            machinePanel = new JImagePanel();
+        }
+        machinePanel.setPreferredSize(new Dimension(450, 35));
+        machinePanel.setBorder(BorderFactory.createEmptyBorder(2,5,0,0));
         machinePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        content.add(machinePanel, BorderLayout.NORTH);
-
-        formLabels[0].setText("Virtual Machine:");
         machinePanel.add(formLabels[0]);
 
         virtualMachineCombo = new JComboBox();
@@ -135,6 +142,7 @@ public class controllerFrame extends JFrame {
             virtualMachineCombo.addItem(vm.getName());
         }
         machinePanel.add(virtualMachineCombo);
+        content.add(machinePanel, BorderLayout.NORTH);
 
         // main
         infoPanel = new JPanel();
@@ -219,7 +227,8 @@ public class controllerFrame extends JFrame {
                         if (task.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
                             successBool = true;
                         }
-                    } catch (Exception ex) {}
+                    } catch (Exception ex) {
+                    }
 
                     if (successBool) {
                         //TODO: show visually
