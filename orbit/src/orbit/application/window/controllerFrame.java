@@ -117,18 +117,19 @@ public class controllerFrame extends JFrame {
         content.setLayout(new BorderLayout(0, 0));
 
         //labels
-        formLabels = new JLabel[6][2];
+        formLabels = new JLabel[7][2];
         for (int i = 0; i < formLabels.length; i++) {
             for (int j = 0; j < formLabels[i].length; j++) {
                 formLabels[i][j] = new JLabel();
             }
         }
         formLabels[0][0].setText("Virtual Machine:");
-        formLabels[1][0].setText("Status:");
-        formLabels[2][0].setText("CPU:");
-        formLabels[3][0].setText("Mem:");
-        formLabels[4][0].setText("Network:");
-        formLabels[5][0].setText("Tools:");
+        formLabels[1][0].setText("Host:");
+        formLabels[2][0].setText("Status:");
+        formLabels[3][0].setText("CPU:");
+        formLabels[4][0].setText("Mem:");
+        formLabels[5][0].setText("Network:");
+        formLabels[6][0].setText("Tools:");
 
         // header
         try {
@@ -184,13 +185,13 @@ public class controllerFrame extends JFrame {
         /*
         vmControlButtons = new JButton[3];
         for (int i = 0; i < vmControlButtons.length; i++) {
-            vmControlButtons[i] = new JButton();
-            //TODO: replace with icons and remove temp text variable
-            vmControlButtons[i].setText(vmSearchButtonsText[i]);
-            controlPanel.add(vmControlButtons[i]);
+        vmControlButtons[i] = new JButton();
+        //TODO: replace with icons and remove temp text variable
+        vmControlButtons[i].setText(vmSearchButtonsText[i]);
+        controlPanel.add(vmControlButtons[i]);
         }
         new poweronButtonClick(vmControlButtons[0]);
-        */
+         */
 
         showVM(virtualMachines[virtualMachineCombo.getSelectedIndex()]);
     }
@@ -227,15 +228,55 @@ public class controllerFrame extends JFrame {
      */
     public void showVM(VirtualMachine vm) {
         // local
-        VirtualMachineSummary summary;
-        
-        // get data
+        Folder rootFolder;
+        VirtualMachinePowerState powerState;
+        HostSystem host;
 
-        formLabels[1][1].setText("status - " + vm.getName());
-        formLabels[2][1].setText("cpu");
-        formLabels[3][1].setText("mem");
-        formLabels[4][1].setText("network");
-        formLabels[5][1].setText("tools");
+        // get data
+        powerState = vm.getRuntime().getPowerState();
+
+        try {
+            // locals
+            ManagedObjectReference hostMOR;
+
+            rootFolder = si.getRootFolder();
+            ManagedEntity[] mes = new InventoryNavigator(rootFolder).searchManagedEntities("HostSystem");
+            if (mes == null || mes.length == 0) {
+                throw new NullPointerException();
+            }
+
+            host = null;
+            hostMOR = vm.getRuntime().getHost();
+            for (int i = 0; i < mes.length; i++) {
+                if (mes[i].getMOR().equals(hostMOR)) {
+                    host = (HostSystem) mes[i];
+                }
+            }
+        } catch (Exception e) {
+            host = null;
+        }
+
+        // host
+        formLabels[1][1].setText(( (host == null) ? "unknown" : host.getName() ));
+
+
+        // powerState
+        if (powerState == VirtualMachinePowerState.poweredOn) {
+            formLabels[2][1].setText("Powered On");
+            formLabels[2][1].setForeground(Color.blue);
+        } else if (powerState == VirtualMachinePowerState.suspended) {
+            formLabels[2][1].setText("Suspended");
+            formLabels[2][1].setForeground(Color.orange);
+        } else {
+            formLabels[2][1].setText("Powered Off");
+            formLabels[2][1].setForeground(Color.red);
+        }
+
+
+        formLabels[3][1].setText("cpu");
+        formLabels[4][1].setText("mem");
+        formLabels[5][1].setText("network");
+        formLabels[6][1].setText("tools");
     }
 
     /**
