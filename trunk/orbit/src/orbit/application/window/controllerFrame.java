@@ -33,7 +33,7 @@ public class controllerFrame extends JFrame {
     private VirtualMachine[] virtualMachines;
     private JComboBox virtualMachineCombo;
     private JLabel[] vmInfoLabels;
-    private JButton[] vmControlButtons;
+    private JLabel formLabels[][];
 
     /**
      * controllerFrame Constructor
@@ -107,11 +107,8 @@ public class controllerFrame extends JFrame {
     public void createGUI() {
         // locals
         JImagePanel machinePanel;
-        JPanel controlPanel, infoPanel;
-        JPanel[] infoDataPanel;
-        JLabel[] formLabels;
-        String[] labelsText = {"Virtual Machine:", "Stauts:", "CPU:", "Mem:", "Network:", "Tools:"};
-        String[] vmSearchButtonsText = {"Start", "Stop", "Reset"};
+        JPanel controlPanel, formPanels[], infoPanels[];
+        String vmSearchButtonsText[] = {"Start", "Stop", "Reset"}; //TODO: remove this
 
         //TODO: disable on no vm's
         //TODO: infoPanel (maybe move current header into info and add header image?)
@@ -120,11 +117,18 @@ public class controllerFrame extends JFrame {
         content.setLayout(new BorderLayout(0, 0));
 
         //labels
-        formLabels = new JLabel[6];
+        formLabels = new JLabel[6][2];
         for (int i = 0; i < formLabels.length; i++) {
-            formLabels[i] = new JLabel();
-            formLabels[i].setText(labelsText[i]);
+            for (int j = 0; j < formLabels[i].length; j++) {
+                formLabels[i][j] = new JLabel();
+            }
         }
+        formLabels[0][0].setText("Virtual Machine:");
+        formLabels[1][0].setText("Status:");
+        formLabels[2][0].setText("CPU:");
+        formLabels[3][0].setText("Mem:");
+        formLabels[4][0].setText("Network:");
+        formLabels[5][0].setText("Tools:");
 
         // header
         try {
@@ -135,36 +139,41 @@ public class controllerFrame extends JFrame {
         machinePanel.setPreferredSize(new Dimension(450, 35));
         machinePanel.setBorder(BorderFactory.createEmptyBorder(2, 5, 0, 0));
         machinePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        machinePanel.add(formLabels[0]);
+        machinePanel.add(formLabels[0][0]);
 
         virtualMachineCombo = new JComboBox();
         for (VirtualMachine vm : virtualMachines) {
             virtualMachineCombo.addItem(vm.getName());
         }
         machinePanel.add(virtualMachineCombo);
+        new virtualMachineComboChange(virtualMachineCombo);
         content.add(machinePanel, BorderLayout.NORTH);
 
         // main
-        infoPanel = new JPanel();
-        infoPanel.setPreferredSize(new Dimension(450, 200));
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        infoPanel.setLayout(new BorderLayout());
-        content.add(infoPanel, BorderLayout.CENTER);
-
-        // Data
-        infoDataPanel = new JPanel[formLabels.length];
-        for (int i = 0; i < infoDataPanel.length; i++) {
-            infoDataPanel[i] = new JPanel();
-            infoDataPanel[i].setLayout(new BorderLayout());
-            infoDataPanel[i].setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
-            if (i < (infoDataPanel.length - 1)) {
-                formLabels[(i + 1)].setPreferredSize(new Dimension(70, 20));
-                infoDataPanel[i].add(formLabels[(i + 1)], BorderLayout.WEST);
+        formPanels = new JPanel[formLabels.length];
+        infoPanels = new JPanel[(formLabels.length - 1)];
+        for (int i = 0; i < formPanels.length; i++) {
+            formPanels[i] = new JPanel();
+            formPanels[i].setLayout(new BorderLayout());
+            if (i > 0) {
+                formPanels[(i - 1)].add(formPanels[i], BorderLayout.CENTER);
             }
-            ((i == 0) ? infoPanel : infoDataPanel[(i - 1)]).add(
-                    infoDataPanel[i],
-                    ((i < (infoDataPanel.length - 1)) ? BorderLayout.NORTH : BorderLayout.CENTER));
+            if (i < (formLabels.length - 1)) {
+                infoPanels[i] = new JPanel();
+                infoPanels[i].setLayout(new BorderLayout());
+                infoPanels[i].setPreferredSize(new Dimension(450, 20));
+                infoPanels[i].setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
+                formLabels[(i + 1)][0].setPreferredSize(new Dimension(70, 20));
+                infoPanels[i].add(formLabels[(i + 1)][0], BorderLayout.WEST);
+                infoPanels[i].add(formLabels[(i + 1)][1], BorderLayout.CENTER);
+                formPanels[i].add(infoPanels[i], BorderLayout.NORTH);
+            }
+
         }
+
+        formPanels[0].setPreferredSize(new Dimension(450, 200));
+        formPanels[0].setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        content.add(formPanels[0], BorderLayout.CENTER);
 
         // footer
         controlPanel = new JPanel();
@@ -172,6 +181,7 @@ public class controllerFrame extends JFrame {
         controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         content.add(controlPanel, BorderLayout.SOUTH);
 
+        /*
         vmControlButtons = new JButton[3];
         for (int i = 0; i < vmControlButtons.length; i++) {
             vmControlButtons[i] = new JButton();
@@ -180,17 +190,9 @@ public class controllerFrame extends JFrame {
             controlPanel.add(vmControlButtons[i]);
         }
         new poweronButtonClick(vmControlButtons[0]);
+        */
 
-        /**
-         * Virtual Machine: <dropdown> <button ... (for searching)>
-         * Status: Running
-         * CPU: xxxmhz
-         * MEM: xxxMB
-         * Networking: ip, ip, ip
-         * Tools: installed/unmaged/not running
-         * ---------------------
-         * <button start> <button shutdown/power.off> <button reset>
-         */
+        showVM(virtualMachines[virtualMachineCombo.getSelectedIndex()]);
     }
 
     /**
@@ -217,6 +219,23 @@ public class controllerFrame extends JFrame {
         }
 
         return vms;
+    }
+
+    /**
+     * Show VirtualMachine information
+     * @param vm VirtualMachine
+     */
+    public void showVM(VirtualMachine vm) {
+        // local
+        VirtualMachineSummary summary;
+        
+        // get data
+
+        formLabels[1][1].setText("status - " + vm.getName());
+        formLabels[2][1].setText("cpu");
+        formLabels[3][1].setText("mem");
+        formLabels[4][1].setText("network");
+        formLabels[5][1].setText("tools");
     }
 
     /**
@@ -253,6 +272,21 @@ public class controllerFrame extends JFrame {
 
                 }
             }
+        }
+    }
+
+    /**
+     * virtual machine combo change event
+     * @author sjorge
+     */
+    class virtualMachineComboChange implements ActionListener {
+
+        public virtualMachineComboChange(JComboBox combo) {
+            combo.addActionListener(this);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            showVM(virtualMachines[virtualMachineCombo.getSelectedIndex()]);
         }
     }
 }
