@@ -112,6 +112,7 @@ public class controllerFrame extends JFrame {
 
         //TODO: disable on no vm's
         //TODO: auto refresh every 3 sec
+        //TODO: nicly handle pause on start/stop/...
 
         // layout
         content.setLayout(new BorderLayout(0, 0));
