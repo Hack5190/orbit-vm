@@ -330,7 +330,11 @@ public class controllerFrame extends JFrame {
             } else {
                 resetButton.setText("Reset");
             }
-            stopButton.setText("Stop");
+            if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+                resetButton.setText("Shutdown");
+            } else {
+                resetButton.setText("Stop");
+            }
 
         } finally {
             if (powerState == VirtualMachinePowerState.poweredOn) {
@@ -357,26 +361,90 @@ public class controllerFrame extends JFrame {
             this.action = action;
         }
 
+        public boolean start(VirtualMachine vm) {
+            // locals
+            com.vmware.vim25.mo.Task t;
+
+            // start vm
+            try {
+                t = vm.powerOnVM_Task(null);
+                if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
+                    return true;
+                }
+            } catch (Exception ex) {
+                return false;
+            }
+            return false;
+        }
+
+        public boolean stop(VirtualMachine vm) {
+            // locals
+            com.vmware.vim25.mo.Task t;
+            GuestInfo guestInfo;
+
+            // guest info
+            guestInfo = vm.getGuest();
+
+            // stop vm
+            try {
+                if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+                    vm.shutdownGuest();
+                    return true;
+                } else {
+                    t = vm.powerOffVM_Task();
+                    if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
+                        return true;
+                    }
+
+                }
+            } catch (Exception ex) {
+                return false;
+            }
+            return false;
+        }
+
+        public boolean restart(VirtualMachine vm) {
+            // locals
+            com.vmware.vim25.mo.Task t;
+            GuestInfo guestInfo;
+
+            // guest info
+            guestInfo = vm.getGuest();
+
+            // stop vm
+            try {
+                if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+                    vm.rebootGuest();
+                    return true;
+                } else {
+                    t = vm.resetVM_Task();
+                    if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
+                        return true;
+                    }
+
+                }
+            } catch (Exception ex) {
+                return false;
+            }
+            return false;
+        }
+
         public void actionPerformed(ActionEvent e) {
             // locals
             VirtualMachine vm;
-            boolean successBool = false;
 
             if (virtualMachineCombo.getSelectedIndex() > -1) {
                 vm = virtualMachines[virtualMachineCombo.getSelectedIndex()];
 
-
                 if (vm != null) {
-                    try {
-                        Task task = vm.powerOnVM_Task(null);
-                        if (task.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
-                            successBool = true;
-                        }
-                    } catch (Exception ex) {
+                    if (action.equalsIgnoreCase("start")) {
+                        this.start(vm);
                     }
-
-                    if (successBool) {
-                        //TODO: show visually
+                    if (action.equalsIgnoreCase("stop")) {
+                        this.stop(vm);
+                    }
+                    if (action.equalsIgnoreCase("reset")) {
+                        this.restart(vm);
                     }
 
                 }
