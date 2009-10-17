@@ -31,8 +31,8 @@ public class controllerFrame extends JFrame {
     private Container content;
     private Properties config;
     private VirtualMachine[] virtualMachines;
+    private JToolBar  vmControlToolBar;
     private JComboBox virtualMachineCombo;
-    private JLabel[] vmInfoLabels;
     private JLabel formLabels[][];
 
     /**
@@ -106,9 +106,9 @@ public class controllerFrame extends JFrame {
      */
     public void createGUI() {
         // locals
+        JButton startButton, stopButton, resetButton;
         JImagePanel machinePanel;
-        JPanel controlPanel, formPanels[], infoPanels[];
-        String vmSearchButtonsText[] = {"Start", "Stop", "Reset"}; //TODO: remove this
+        JPanel formPanels[], infoPanels[];
 
         //TODO: disable on no vm's
         //TODO: auto refresh every 3 sec
@@ -177,11 +177,19 @@ public class controllerFrame extends JFrame {
         content.add(formPanels[0], BorderLayout.CENTER);
 
         // footer
-        controlPanel = new JPanel();
-        controlPanel.setPreferredSize(new Dimension(450, 30));
-        controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        content.add(controlPanel, BorderLayout.SOUTH);
+        vmControlToolBar = new JToolBar("Virtual Machine Controls");
+        vmControlToolBar.setFloatable(true);
+        content.add(vmControlToolBar, BorderLayout.SOUTH);
 
+        // control buttons
+        startButton = new JButton("start");
+        vmControlToolBar.add(startButton);
+
+        stopButton = new JButton("stop");
+        vmControlToolBar.add(stopButton);
+
+        resetButton = new JButton("reset");
+        vmControlToolBar.add(resetButton);
 
         // load data
         showVM(virtualMachines[virtualMachineCombo.getSelectedIndex()]);
