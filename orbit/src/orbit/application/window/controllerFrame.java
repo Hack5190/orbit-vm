@@ -126,9 +126,9 @@ public class controllerFrame extends JFrame {
         formLabels[0][0].setText("Virtual Machine:");
         formLabels[1][0].setText("Host:");
         formLabels[2][0].setText("Status:");
-        formLabels[3][0].setText("CPU:");
-        formLabels[4][0].setText("Mem:");
-        formLabels[5][0].setText("IP:");
+        formLabels[3][0].setText("Guest OS:");
+        formLabels[4][0].setText("Hostname:");
+        formLabels[5][0].setText("IP Address:");
         formLabels[6][0].setText("Tools:");
 
         // header
@@ -265,8 +265,8 @@ public class controllerFrame extends JFrame {
         }
 
 
-        formLabels[3][1].setText("cpu");
-        formLabels[4][1].setText("mem");
+        formLabels[3][1].setText((guestInfo.getGuestFullName() == null) ? "-" : guestInfo.getGuestFullName());
+        formLabels[4][1].setText((guestInfo.getHostName() == null) ? "-" : guestInfo.getHostName());
         formLabels[5][1].setText((guestInfo.getIpAddress() == null) ? "-" : guestInfo.getIpAddress());
 
         // tools information
