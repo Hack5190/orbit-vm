@@ -113,6 +113,8 @@ public class controllerFrame extends JFrame {
         //TODO: disable on no vm's
         //TODO: auto refresh every 3 sec
         //TODO: nicly handle pause on start/stop/...
+        //TODO: confirm for reset?
+        //TODO: also make reset possible if vmware tools?
 
         // layout
         content.setLayout(new BorderLayout(0, 0));
