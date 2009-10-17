@@ -31,7 +31,7 @@ public class controllerFrame extends JFrame {
     private Container content;
     private Properties config;
     private VirtualMachine[] virtualMachines;
-    private JToolBar  vmControlToolBar;
+    private JToolBar vmControlToolBar;
     private JButton startButton, stopButton, resetButton;
     private JComboBox virtualMachineCombo;
     private JLabel formLabels[][];
@@ -303,20 +303,43 @@ public class controllerFrame extends JFrame {
         }
 
         // update toolbar
+        startButton.setVisible(true);
+        stopButton.setVisible(true);
+        resetButton.setVisible(true);
         try {
-            startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/start.png")));
-        } catch (Exception e) {
-            startButton.setText("Start");
-        }
-        try {
-            stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/stop.png")));
-        } catch (Exception e) {
-            stopButton.setText("Stop");
-        }
-        try {
+            if (powerState == VirtualMachinePowerState.poweredOn) {
+                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/suspend.png")));
+            } else if (powerState == VirtualMachinePowerState.suspended) {
+                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/start.png")));
+            } else {
+                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/start.png")));
+            }
             resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/reset.png")));
+            stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/stop.png")));
+
         } catch (Exception e) {
-            resetButton.setText("Reset");
+            if (powerState == VirtualMachinePowerState.poweredOn) {
+                startButton.setText("Suspend");
+            } else if (powerState == VirtualMachinePowerState.suspended) {
+                startButton.setText("Start");
+            } else {
+                startButton.setText("Start");
+            }
+            if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+                resetButton.setText("Restart");
+            } else {
+                resetButton.setText("Reset");
+            }
+            stopButton.setText("Stop");
+
+        } finally {
+            if (powerState == VirtualMachinePowerState.poweredOn) {
+            } else if (powerState == VirtualMachinePowerState.suspended) {
+                stopButton.setVisible(false);
+            } else {
+                stopButton.setVisible(false);
+                resetButton.setVisible(false);
+            }
         }
 
     }
@@ -326,6 +349,7 @@ public class controllerFrame extends JFrame {
      * @author sjorge
      */
     class controleButtonClick implements ActionListener {
+
         private String action;
 
         public controleButtonClick(JButton button, String action) {
