@@ -183,12 +183,15 @@ public class controllerFrame extends JFrame {
 
         // control buttons
         startButton = new JButton();
+        new controleButtonClick(startButton, "start");
         vmControlToolBar.add(startButton);
 
         stopButton = new JButton();
+        new controleButtonClick(stopButton, "stop");
         vmControlToolBar.add(stopButton);
 
         resetButton = new JButton();
+        new controleButtonClick(resetButton, "reset");
         vmControlToolBar.add(resetButton);
 
         // load data
@@ -319,13 +322,15 @@ public class controllerFrame extends JFrame {
     }
 
     /**
-     * close button click event
+     * controle button click event
      * @author sjorge
      */
-    class poweronButtonClick implements ActionListener {
+    class controleButtonClick implements ActionListener {
+        private String action;
 
-        public poweronButtonClick(JButton button) {
+        public controleButtonClick(JButton button, String action) {
             button.addActionListener(this);
+            this.action = action;
         }
 
         public void actionPerformed(ActionEvent e) {
