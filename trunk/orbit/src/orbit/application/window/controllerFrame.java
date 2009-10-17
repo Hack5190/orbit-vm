@@ -86,6 +86,15 @@ public class controllerFrame extends JFrame {
         // collect virtual machines
         virtualMachines = window.getVirtualMachines();
 
+        // exit if no vm's
+        if (virtualMachines == null) {
+            JOptionPane.showMessageDialog(null,
+                    "No virtual machines where found!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(-404);
+        }
+
         // gui
         window.createGUI();
     }
@@ -110,7 +119,6 @@ public class controllerFrame extends JFrame {
         JImagePanel machinePanel;
         JPanel formPanels[], infoPanels[];
 
-        //TODO: disable on no vm's
         //TODO: auto refresh every 3 sec
         //TODO: update info lables to match client
         /*
