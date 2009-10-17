@@ -364,12 +364,24 @@ public class controllerFrame extends JFrame {
         public boolean start(VirtualMachine vm) {
             // locals
             com.vmware.vim25.mo.Task t;
+            VirtualMachinePowerState powerState;
+
+            // get powerstate
+            powerState = vm.getRuntime().getPowerState();
 
             // start vm
             try {
-                t = vm.powerOnVM_Task(null);
-                if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
-                    return true;
+
+                if (powerState == VirtualMachinePowerState.poweredOn) {
+                    t = vm.suspendVM_Task();
+                    if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
+                        return true;
+                    }
+                } else {
+                    t = vm.powerOnVM_Task(null);
+                    if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
+                        return true;
+                    }
                 }
             } catch (Exception ex) {
                 return false;
