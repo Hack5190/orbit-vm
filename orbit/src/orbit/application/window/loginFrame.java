@@ -341,7 +341,7 @@ public class loginFrame extends JFrame {
                 statusLabel.setIcon(null);
             } else {
                 try {
-                    statusLabel.setIcon(new ImageIcon(window.getClass().getResource(String.format("/orbit/application/resources/statusbar/%s.gif", icon))));
+                    statusLabel.setIcon(new ImageIcon(window.getClass().getResource(String.format("/orbit/application/resources/statusbar/%s.%s", icon, ( (!icon.equalsIgnoreCase("processing")) ? "png" : "gif")))));
                 } catch (Exception e) {
                     statusLabel.setIcon(null);
                 }
