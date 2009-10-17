@@ -32,6 +32,7 @@ public class controllerFrame extends JFrame {
     private Properties config;
     private VirtualMachine[] virtualMachines;
     private JToolBar  vmControlToolBar;
+    private JButton startButton, stopButton, resetButton;
     private JComboBox virtualMachineCombo;
     private JLabel formLabels[][];
 
@@ -106,7 +107,6 @@ public class controllerFrame extends JFrame {
      */
     public void createGUI() {
         // locals
-        JButton startButton, stopButton, resetButton;
         JImagePanel machinePanel;
         JPanel formPanels[], infoPanels[];
 
@@ -182,13 +182,13 @@ public class controllerFrame extends JFrame {
         content.add(vmControlToolBar, BorderLayout.SOUTH);
 
         // control buttons
-        startButton = new JButton("start");
+        startButton = new JButton();
         vmControlToolBar.add(startButton);
 
-        stopButton = new JButton("stop");
+        stopButton = new JButton();
         vmControlToolBar.add(stopButton);
 
-        resetButton = new JButton("reset");
+        resetButton = new JButton();
         vmControlToolBar.add(resetButton);
 
         // load data
@@ -297,6 +297,23 @@ public class controllerFrame extends JFrame {
         } else {
             formLabels[6][1].setText("unknown");
             formLabels[6][1].setForeground(null);
+        }
+
+        // update toolbar
+        try {
+            startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/start.png")));
+        } catch (Exception e) {
+            startButton.setText("Start");
+        }
+        try {
+            stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/stop.png")));
+        } catch (Exception e) {
+            stopButton.setText("Stop");
+        }
+        try {
+            resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/reset.png")));
+        } catch (Exception e) {
+            resetButton.setText("Reset");
         }
 
     }
