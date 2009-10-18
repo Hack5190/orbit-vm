@@ -326,32 +326,32 @@ public class controllerFrame extends JFrame {
         resetButton.setVisible(true);
         try {
             if (powerState == VirtualMachinePowerState.poweredOn) {
-                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/suspend.png")));
+                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-suspend.png")));
             } else if (powerState == VirtualMachinePowerState.suspended) {
-                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/start.png")));
+                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
             } else {
-                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/start.png")));
+                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
             }
-            resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/reset.png")));
-            stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/stop.png")));
+            resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-reset.png")));
+            stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweroff.png")));
 
         } catch (Exception e) {
             if (powerState == VirtualMachinePowerState.poweredOn) {
                 startButton.setText("Suspend");
             } else if (powerState == VirtualMachinePowerState.suspended) {
-                startButton.setText("Start");
+                startButton.setText("Power On");
             } else {
-                startButton.setText("Start");
+                startButton.setText("Power Off");
             }
             if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
-                resetButton.setText("Restart");
+                resetButton.setText("Reboot");
             } else {
                 resetButton.setText("Reset");
             }
             if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
                 resetButton.setText("Shutdown");
             } else {
-                resetButton.setText("Stop");
+                resetButton.setText("Power Off");
             }
 
         } finally {
