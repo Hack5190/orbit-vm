@@ -125,6 +125,8 @@ public class controllerFrame extends JFrame {
          Guest OS, CPU, Mem, Mem Overhead, VM Tools (no running, ok, unmaged),
          IP Adresses, DNS Name, State, Host
          */
+	//TODO: look at vmware icons (http://communities.vmware.com/servlet/JiveServlet/previewBody/9441-102-52-9055/icons.html;jsessionid=5F71473B35E20DD0A13D6092278A1058)
+	//TODO: add running/stopped icon to combo?
         //TODO: confirm for reset and halt
         //TODO: better icons!
         //TODO: handle sucess/fail and don't hang
