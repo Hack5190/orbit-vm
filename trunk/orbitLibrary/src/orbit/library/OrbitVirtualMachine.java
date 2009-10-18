@@ -13,12 +13,12 @@ import java.util.*;
 import com.vmware.vim25.*;
 import com.vmware.vim25.mo.*;
 
-public class VirtualMachineWrapper {
+public class OrbitVirtualMachine {
 
     //variables
     VirtualMachine vm;
 
-    public VirtualMachineWrapper(VirtualMachine vm) {
+    public OrbitVirtualMachine(VirtualMachine vm) {
 	this.vm = vm;
     }
 
