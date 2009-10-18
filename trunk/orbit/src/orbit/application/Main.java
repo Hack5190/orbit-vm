@@ -25,7 +25,11 @@ public class Main {
         UIManager.setLookAndFeel(
                 UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) { /* do nothing */ }
-        
+
+	// apple specific tweaks
+	System.setProperty("apple.laf.useScreenMenuBar", "true");
+	System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Orbit");
+
         // create login window
         JFrame loginWindow = new loginFrame();
         loginWindow.setVisible(true);

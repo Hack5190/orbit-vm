@@ -128,7 +128,6 @@ public class controllerFrame extends JFrame {
         //TODO: confirm for reset and halt
         //TODO: better icons!
         //TODO: handle sucess/fail and don't hang
-	//TODO: renamed orbit.application to orbit.manager
 	//TODO: wrapper for VirtualMachine (VirtualMachineMananger (in si, out vm's with search) - VirtualMachine (wrapper for common used data)
 
         // layout
