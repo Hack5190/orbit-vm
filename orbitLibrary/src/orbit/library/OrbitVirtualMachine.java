@@ -147,4 +147,6 @@ public class OrbitVirtualMachine {
 
 	return host;
     }
+
+    //TODO: smart powerOn/powerOff/suspend/reset
 }
