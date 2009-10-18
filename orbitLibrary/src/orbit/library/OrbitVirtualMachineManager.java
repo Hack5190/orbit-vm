@@ -13,22 +13,22 @@ import java.util.*;
 import com.vmware.vim25.*;
 import com.vmware.vim25.mo.*;
 
-public class VirtualMachineManager {
+public class OrbitVirtualMachineManager {
 
     // variables
     private ServiceInstance si;
 
-    public VirtualMachineManager(ServiceInstance serviceInstant) {
+    public OrbitVirtualMachineManager(ServiceInstance serviceInstant) {
 	// self reference
 	this.si = serviceInstant;
 
 
     }
 
-    public VirtualMachineWrapper[] getAllVirualMachines() {
+    public OrbitVirtualMachine[] getAllVirualMachines() {
 	// locals
 	Folder rootFolder;
-	VirtualMachineWrapper[] vms;
+	OrbitVirtualMachine[] vms;
 
 	// get rootFolder and look for vm's
 	try {
@@ -37,11 +37,11 @@ public class VirtualMachineManager {
 	    if (mes == null || mes.length == 0) {
 		throw new NullPointerException();
 	    }
-	    vms = new VirtualMachineWrapper[mes.length];
+	    vms = new OrbitVirtualMachine[mes.length];
 	    for (int i = 0; i < mes.length; i++) {
 		String nameString = ((VirtualMachine) mes[i]).getName();
 
-		vms[i] = new VirtualMachineWrapper((VirtualMachine) mes[i]);
+		vms[i] = new OrbitVirtualMachine((VirtualMachine) mes[i]);
 
 	    }
 	} catch (Exception e) {
@@ -51,11 +51,11 @@ public class VirtualMachineManager {
 	return vms;
     }
 
-    public VirtualMachineWrapper[] getVirtualMachinesByName(String name) {
+    public OrbitVirtualMachine[] getVirtualMachinesByName(String name) {
 	// locals
 	ArrayList vms = new ArrayList();
 
-	for (VirtualMachineWrapper vm : this.getAllVirualMachines()) {
+	for (OrbitVirtualMachine vm : this.getAllVirualMachines()) {
 	    boolean match = false;
 
 	    if (name.startsWith("%") && !name.endsWith("%")) {
@@ -73,19 +73,19 @@ public class VirtualMachineManager {
 	    }
 	}
 
-	return (VirtualMachineWrapper[]) vms.toArray();
+	return (OrbitVirtualMachine[]) vms.toArray();
     }
 
-    public VirtualMachineWrapper[] getVirtualMachinesByHost(HostSystem host) {
+    public OrbitVirtualMachine[] getVirtualMachinesByHost(HostSystem host) {
 	// locals
 	ArrayList vms = new ArrayList();
 
-	for (VirtualMachineWrapper vm : this.getAllVirualMachines()) {
+	for (OrbitVirtualMachine vm : this.getAllVirualMachines()) {
 	    if (vm.getHost() == host) {
 		vms.add(vm);
 	    }
 	}
 
-	return (VirtualMachineWrapper[]) vms.toArray();
+	return (OrbitVirtualMachine[]) vms.toArray();
     }
 }
