@@ -56,7 +56,9 @@ public class controllerFrame extends JFrame {
 
             @Override
             public void windowClosing(WindowEvent w) {
-                if (config.getProperty("close.action", "close").equals("login")) {
+                if (new Boolean(config.getProperty("interface.close", "true"))) {
+                    System.exit(0);
+                } else {
                     // create login window
                     JFrame loginWindow = new loginFrame();
                     loginWindow.setVisible(true);
@@ -66,8 +68,6 @@ public class controllerFrame extends JFrame {
 
                     // dispose this window
                     window.dispose();
-                } else {
-                    System.exit(0);
                 }
             }
         });
@@ -122,15 +122,15 @@ public class controllerFrame extends JFrame {
         //TODO: auto refresh every 3 sec
         //TODO: update info lables to match client
         /*
-         Guest OS, CPU, Mem, Mem Overhead, VM Tools (no running, ok, unmaged),
-         IP Adresses, DNS Name, State, Host
+        Guest OS, CPU, Mem, Mem Overhead, VM Tools (no running, ok, unmaged),
+        IP Adresses, DNS Name, State, Host
          */
-	//TODO: look at vmware icons (http://communities.vmware.com/servlet/JiveServlet/previewBody/9441-102-52-9055/icons.html;jsessionid=5F71473B35E20DD0A13D6092278A1058)
-	//TODO: add running/stopped icon to combo?
+        //TODO: look at vmware icons (http://communities.vmware.com/servlet/JiveServlet/previewBody/9441-102-52-9055/icons.html;jsessionid=5F71473B35E20DD0A13D6092278A1058)
+        //TODO: add running/stopped icon to combo?
         //TODO: confirm for reset and halt
         //TODO: better icons!
         //TODO: handle sucess/fail and don't hang
-	//TODO: wrapper for VirtualMachine (VirtualMachineMananger (in si, out vm's with search) - VirtualMachine (wrapper for common used data)
+        //TODO: wrapper for VirtualMachine (VirtualMachineMananger (in si, out vm's with search) - VirtualMachine (wrapper for common used data)
 
         // layout
         content.setLayout(new BorderLayout(0, 0));

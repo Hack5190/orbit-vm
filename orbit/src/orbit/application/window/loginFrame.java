@@ -46,6 +46,9 @@ public class loginFrame extends JFrame {
         // get content
         content = window.getContentPane();
 
+        // configuration
+        config = readConfiguration();
+
         // main windows setup
         window.setTitle("Orbit Manager");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,10 +63,7 @@ public class loginFrame extends JFrame {
         } catch (Exception e) {
             // nothing to do
         }
-
-        // configuration
-        config = readConfiguration();
-
+        
         // gui
         window.createGUI();
         window.attachEvents();

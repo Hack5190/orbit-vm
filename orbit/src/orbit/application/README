@@ -7,11 +7,16 @@ The following properties can be added or change in orbit.properties:
 ## controller (default) -> simple vm controller
 ## manager -> replacement for vsphere client
 interface=controller
-# close.action
-# values = (login|close)
-## login -> show login dialog on closing main window
-## close (default) -> close on closing main window
-close.action=login
+# interface.close
+# values = (true|false)
+## quit application when a window is closed
+interface.close=true
+# interface.login.advance
+# values = (true|false)
+## show advance login
+interface.login.advance=true
 # recent user/server - auto updated on successful login
 recent.login=root
-recent.server=apollo.virtual.blackdot.be
+recent.server=apollo.vsphere.example.org
+recent.tunnel.login=user
+recent.tunnel.server=shell.srv.example.org

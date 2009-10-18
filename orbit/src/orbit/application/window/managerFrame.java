@@ -35,7 +35,7 @@ public class managerFrame extends JFrame {
     public managerFrame(ServiceInstance serviceInstant, Properties cfg) {
         // self reference
         window = this;
-	config = cfg;
+        config = cfg;
         si = serviceInstant;
 
         // get content
@@ -43,26 +43,25 @@ public class managerFrame extends JFrame {
 
         // main windows setup
         window.setTitle(String.format("Orbit Manager (%s)", config.getProperty("recent.server", "unknown")));
-	window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-	window.addWindowListener(new WindowAdapter() {
+        window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        window.addWindowListener(new WindowAdapter() {
 
-	    @Override
-	    public void windowClosing(WindowEvent w) {
-		if (config.getProperty("close.action", "close").equals("login")) {
-		    // create login window
-		    JFrame loginWindow = new loginFrame();
-		    loginWindow.setVisible(true);
+            @Override
+            public void windowClosing(WindowEvent w) {
+                if (new Boolean(config.getProperty("interface.close", "true"))) {
+                    System.exit(0);
+                } else {
+                    // create login window
+                    JFrame loginWindow = new loginFrame();
+                    loginWindow.setVisible(true);
 
                     // disconnect
                     si.getServerConnection().logout();
 
-		    // dispose this window
-		    window.dispose();
-		} else {
-		    System.exit(0);
-		}
-	    }
-	});
+                    // dispose this window
+                    window.dispose();
+                }            }
+        });
         window.setResizable(true);
         window.setSize(new Dimension(750, 500));
         window.setPreferredSize(new Dimension(750, 500));
