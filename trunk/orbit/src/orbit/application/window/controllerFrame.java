@@ -268,22 +268,22 @@ public class controllerFrame extends JFrame {
 	resetButton.setVisible(true);
 	try {
 	    if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-		startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/suspend.png")));
+		startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-suspend.png")));
 	    } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-		startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/start.png")));
+		startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
 	    } else {
-		startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/start.png")));
+		startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
 	    }
-	    resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/reset.png")));
-	    stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/toolbar/stop.png")));
+	    resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-reset.png")));
+	    stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweroff.png")));
 
 	} catch (Exception e) {
 	    if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
 		startButton.setText("Suspend");
 	    } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-		startButton.setText("Start");
+		startButton.setText("Power On");
 	    } else {
-		startButton.setText("Start");
+		startButton.setText("Power On");
 	    }
 	    if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
 		resetButton.setText("Restart");
@@ -293,7 +293,7 @@ public class controllerFrame extends JFrame {
 	    if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
 		resetButton.setText("Shutdown");
 	    } else {
-		resetButton.setText("Stop");
+		resetButton.setText("Power Off");
 	    }
 
 	} finally {
