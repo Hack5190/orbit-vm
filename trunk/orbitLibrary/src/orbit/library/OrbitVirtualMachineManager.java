@@ -18,6 +18,10 @@ public class OrbitVirtualMachineManager {
     // variables
     private ServiceInstance si;
 
+    /**
+     * Create a Virtual Machine Manager
+     * @param serviceInstant connection to get virtual machines from
+     */
     public OrbitVirtualMachineManager(ServiceInstance serviceInstant) {
 	// self reference
 	this.si = serviceInstant;
@@ -25,6 +29,10 @@ public class OrbitVirtualMachineManager {
 
     }
 
+    /**
+     * Get all virtual machines
+     * @return virtual machines
+     */
     public OrbitVirtualMachine[] getAllVirualMachines() {
 	// locals
 	Folder rootFolder;
@@ -51,6 +59,11 @@ public class OrbitVirtualMachineManager {
 	return vms;
     }
 
+    /**
+     * Get all virtual machines matching name
+     * @param name name of virtual machine, wildcards using %name, name% and %name%
+     * @return virtual machines
+     */
     public OrbitVirtualMachine[] getVirtualMachinesByName(String name) {
 	// locals
 	ArrayList vms = new ArrayList();
@@ -76,6 +89,11 @@ public class OrbitVirtualMachineManager {
 	return (OrbitVirtualMachine[]) vms.toArray();
     }
 
+    /**
+     * Get all virtual machines by host
+     * @param host host
+     * @return virtual machines
+     */
     public OrbitVirtualMachine[] getVirtualMachinesByHost(HostSystem host) {
 	// locals
 	ArrayList vms = new ArrayList();
