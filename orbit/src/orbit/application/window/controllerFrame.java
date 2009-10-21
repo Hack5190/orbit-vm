@@ -336,11 +336,11 @@ public class controllerFrame extends JFrame {
                         }
                     } else if (action.equalsIgnoreCase("stop")) {
                         if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                            vm.powerOff();
+                            vm.powerOff(true);
                         }
                     } else if (action.equalsIgnoreCase("reset")) {
                         if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                            vm.reset();
+                            vm.reset(true);
                         }
                     }
                 }
