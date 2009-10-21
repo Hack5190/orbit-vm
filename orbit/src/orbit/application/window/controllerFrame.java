@@ -128,7 +128,6 @@ public class controllerFrame extends JFrame {
 	 */
 	//TODO: confirm for reset and halt
 	//TODO: handle sucess/fail and don't hang
-        //TODO: wrapper for VirtualMachine (VirtualMachineMananger (in si, out vm's with search) - VirtualMachine (wrapper for common used data)
 
 	// layout
 	content.setLayout(new BorderLayout(0, 0));
@@ -320,87 +319,6 @@ public class controllerFrame extends JFrame {
 	    button.addActionListener(this);
 	    this.action = action;
 	}
-
-	public boolean start(VirtualMachine vm) {
-	    // locals
-	    com.vmware.vim25.mo.Task t;
-	    VirtualMachinePowerState powerState;
-
-	    // get powerstate
-	    powerState = vm.getRuntime().getPowerState();
-
-	    // start vm
-	    try {
-
-		if (powerState == VirtualMachinePowerState.poweredOn) {
-		    t = vm.suspendVM_Task();
-		    if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
-			return true;
-		    }
-		} else {
-		    t = vm.powerOnVM_Task(null);
-		    if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
-			return true;
-		    }
-		}
-	    } catch (Exception ex) {
-		return false;
-	    }
-	    return false;
-	}
-
-	public boolean stop(VirtualMachine vm) {
-	    // locals
-	    com.vmware.vim25.mo.Task t;
-	    GuestInfo guestInfo;
-
-	    // guest info
-	    guestInfo = vm.getGuest();
-
-	    // stop vm
-	    try {
-		if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
-		    vm.shutdownGuest();
-		    return true;
-		} else {
-		    t = vm.powerOffVM_Task();
-		    if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
-			return true;
-		    }
-
-		}
-	    } catch (Exception ex) {
-		return false;
-	    }
-	    return false;
-	}
-
-	public boolean restart(VirtualMachine vm) {
-	    // locals
-	    com.vmware.vim25.mo.Task t;
-	    GuestInfo guestInfo;
-
-	    // guest info
-	    guestInfo = vm.getGuest();
-
-	    // stop vm
-	    try {
-		if (guestInfo.getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
-		    vm.rebootGuest();
-		    return true;
-		} else {
-		    t = vm.resetVM_Task();
-		    if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
-			return true;
-		    }
-
-		}
-	    } catch (Exception ex) {
-		return false;
-	    }
-	    return false;
-	}
-
 	public void actionPerformed(ActionEvent e) {
 	    // locals
 	    OrbitVirtualMachine vm;
@@ -409,19 +327,7 @@ public class controllerFrame extends JFrame {
 		vm = virtualMachines[virtualMachineCombo.getSelectedIndex()];
 
 		if (vm != null) {
-		    if (action.equalsIgnoreCase("start")) {
-			//TODO: update for orbit wrapper
-			//this.start(vm);
-		    }
-		    if (action.equalsIgnoreCase("stop")) {
-			//TODO: update for orbit wrapper
-			//this.stop(vm);
-		    }
-		    if (action.equalsIgnoreCase("reset")) {
-			//TODO: update for orbit wrapper
-			//this.restart(vm);
-		    }
-
+		    //TODO: handle power state changes
 		}
 	    }
 	}
