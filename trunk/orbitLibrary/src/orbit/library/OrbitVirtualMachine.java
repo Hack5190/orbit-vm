@@ -18,22 +18,42 @@ public class OrbitVirtualMachine {
     //variables
     VirtualMachine vm;
 
+    /**
+     * Create OrbitVirtualMachine from a VirtualMachine
+     * @param vm Virtual Machine that you want to wrap
+     */
     public OrbitVirtualMachine(VirtualMachine vm) {
         this.vm = vm;
     }
 
+    /**
+     * Get the internal VirtualMachine
+     * @return the virtual machine
+     */
     public VirtualMachine getVirtualMachine() {
         return vm;
     }
 
+    /**
+     * Get the name of the virtual machine
+     * @return name of virtual machine
+     */
     public String getName() {
         return vm.getName();
     }
 
+    /**
+     * Get the VirtualMachinePowerState from the VirtualMachine
+     * @return VitualMachinePowerState
+     */
     public VirtualMachinePowerState getPowerState() {
         return vm.getRuntime().getPowerState();
     }
 
+    /**
+     * Get the guest state
+     * @return guest state
+     */
     public String getGuestState() {
         // local
         GuestInfo gi = this.getGuestInfo();
@@ -41,10 +61,18 @@ public class OrbitVirtualMachine {
         return gi.getGuestState();
     }
 
+    /**
+     * Get the GuestInfo form the VirtualMachine
+     * @return Guest Info
+     */
     public GuestInfo getGuestInfo() {
         return vm.getGuest();
     }
 
+    /**
+     * Check if tools are installed
+     * @return true if installed
+     */
     public boolean isToolsInstalled() {
         // local
         GuestInfo gi = this.getGuestInfo();
@@ -52,6 +80,11 @@ public class OrbitVirtualMachine {
         return !(gi.getToolsStatus() == VirtualMachineToolsStatus.toolsNotInstalled);
     }
 
+    /**
+     * 
+     * Check if tools are running
+     * @return true if running
+     */
     public boolean isToolsRunning() {
         // local
         GuestInfo gi = this.getGuestInfo();
@@ -59,6 +92,10 @@ public class OrbitVirtualMachine {
         return !(gi.getToolsStatus() == VirtualMachineToolsStatus.toolsOk);
     }
 
+    /**
+     * Check if tools are up to date
+     * @return true if up to date
+     */
     public boolean isToolsUpgradable() {
         // local
         GuestInfo gi = this.getGuestInfo();
@@ -66,6 +103,10 @@ public class OrbitVirtualMachine {
         return (gi.getToolsStatus() == VirtualMachineToolsStatus.toolsOld);
     }
 
+    /**
+     * Check if tools are unmanaged
+     * @return true if unmanaged
+     */
     public boolean isToolsUnmanaged() {
         // local
         GuestInfo gi = this.getGuestInfo();
@@ -73,6 +114,10 @@ public class OrbitVirtualMachine {
         return gi.getToolsVersionStatus().equals("guestToolsUnmanaged");
     }
 
+    /**
+     * Get the most complete OS name
+     * @return os name
+     */
     public String getGuestOSName() {
         // locals
         String os = "unknown";
@@ -89,6 +134,10 @@ public class OrbitVirtualMachine {
         return os;
     }
 
+    /**
+     * Get hostname of guest if available
+     * @return hostname
+     */
     public String getGuestHostName() {
         // local
         GuestInfo gi = this.getGuestInfo();
@@ -96,6 +145,10 @@ public class OrbitVirtualMachine {
         return gi.getHostName();
     }
 
+    /**
+     * Get primary ip of guest if available
+     * @return primary ip
+     */
     public String getGuestPrimaryIP() {
         // local
         GuestInfo gi = this.getGuestInfo();
@@ -103,13 +156,17 @@ public class OrbitVirtualMachine {
         return gi.getIpAddress();
     }
 
+    /**
+     * Get all ip's of guest if available
+     * @return ip's of guest
+     */
     public String[] getGuestIPs() {
         // local
         ArrayList result = new ArrayList();
         GuestInfo gi = this.getGuestInfo();
         GuestNicInfo gni[] = gi.getNet();
 
-        // loops ip's
+        // loop ip's
         for (GuestNicInfo nic : gni) {
             for (String ip : nic.getIpAddress()) {
                 result.add(ip);
@@ -119,6 +176,10 @@ public class OrbitVirtualMachine {
         return (String[]) result.toArray();
     }
 
+    /**
+     * Get the Host on which the VirtualMachien runs
+     * @return host
+     */
     public HostSystem getHost() {
         // locals
         HostSystem host;
@@ -148,6 +209,10 @@ public class OrbitVirtualMachine {
         return host;
     }
 
+    /**
+     * Power On the VirtualMachine
+     * @return true if powered on
+     */
     public boolean powerOn() {
         // locals
         com.vmware.vim25.mo.Task t;
@@ -169,10 +234,19 @@ public class OrbitVirtualMachine {
         return false;
     }
 
+    /**
+     * Power Off the VirtualMachine
+     * @return true if powered off
+     */
     public boolean powerOff() {
         return this.powerOff(false);
     }
 
+    /**
+     * Power Off the VirtualMachine
+     * @param useTools try to do shutdown if tools are running
+     * @return true if powered off
+     */
     public boolean powerOff(boolean useTools) {
         // locals
         com.vmware.vim25.mo.Task t;
@@ -197,10 +271,19 @@ public class OrbitVirtualMachine {
         return false;
     }
 
+    /**
+     * Reset the VirtualMachine
+     * @return true on success
+     */
     public boolean reset() {
         return this.reset(false);
     }
 
+    /**
+     * Reset the VirtualMachine
+     * @param useTools try to do a restart if tools are running
+     * @return true on success
+     */
     public boolean reset(boolean useTools) {
         // locals
         com.vmware.vim25.mo.Task t;
@@ -223,6 +306,10 @@ public class OrbitVirtualMachine {
         return false;
     }
 
+    /**
+     * Suspend the VirtualMachine
+     * @return true if suspended
+     */
     public boolean suspend() {
         // locals
         com.vmware.vim25.mo.Task t;
