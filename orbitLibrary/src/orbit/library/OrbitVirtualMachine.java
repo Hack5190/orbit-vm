@@ -170,6 +170,10 @@ public class OrbitVirtualMachine {
     }
 
     public boolean powerOff() {
+        return this.powerOff(false);
+    }
+
+    public boolean powerOff(boolean useTools) {
         // locals
         com.vmware.vim25.mo.Task t;
 
@@ -177,7 +181,7 @@ public class OrbitVirtualMachine {
         try {
             if (this.getPowerState() == VirtualMachinePowerState.poweredOff) {
                 return true;
-            } else if (this.isToolsRunning()) {
+            } else if (useTools && this.isToolsRunning()) {
                 this.getVirtualMachine().shutdownGuest();
                 return true;
             } else {
@@ -194,12 +198,16 @@ public class OrbitVirtualMachine {
     }
 
     public boolean reset() {
+        return this.reset(false);
+    }
+
+    public boolean reset(boolean useTools) {
         // locals
         com.vmware.vim25.mo.Task t;
 
         // stop vm
         try {
-            if (this.isToolsRunning()) {
+            if (useTools && this.isToolsRunning()) {
                 this.getVirtualMachine().rebootGuest();
                 return true;
             } else {
