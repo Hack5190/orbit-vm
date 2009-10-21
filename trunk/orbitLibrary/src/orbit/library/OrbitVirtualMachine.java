@@ -45,28 +45,28 @@ public class OrbitVirtualMachine {
         return vm.getGuest();
     }
 
-    public boolean getToolsInstalled() {
+    public boolean isToolsInstalled() {
         // local
         GuestInfo gi = this.getGuestInfo();
 
         return !(gi.getToolsStatus() == VirtualMachineToolsStatus.toolsNotInstalled);
     }
 
-    public boolean getToolsRunning() {
+    public boolean isToolsRunning() {
         // local
         GuestInfo gi = this.getGuestInfo();
 
         return !(gi.getToolsStatus() == VirtualMachineToolsStatus.toolsOk);
     }
 
-    public boolean getToolsUpgradable() {
+    public boolean isToolsUpgradable() {
         // local
         GuestInfo gi = this.getGuestInfo();
 
         return (gi.getToolsStatus() == VirtualMachineToolsStatus.toolsOld);
     }
 
-    public boolean getToolsUnmanaged() {
+    public boolean isToolsUnmanaged() {
         // local
         GuestInfo gi = this.getGuestInfo();
 
@@ -177,7 +177,7 @@ public class OrbitVirtualMachine {
         try {
             if (this.getPowerState() == VirtualMachinePowerState.poweredOff) {
                 return true;
-            } else if (this.getToolsRunning()) {
+            } else if (this.isToolsRunning()) {
                 this.getVirtualMachine().shutdownGuest();
                 return true;
             } else {
@@ -199,7 +199,7 @@ public class OrbitVirtualMachine {
 
         // stop vm
         try {
-            if (this.getToolsRunning()) {
+            if (this.isToolsRunning()) {
                 this.getVirtualMachine().rebootGuest();
                 return true;
             } else {
