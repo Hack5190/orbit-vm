@@ -308,9 +308,18 @@ public class OrbitVirtualMachine {
 
     /**
      * Suspend the VirtualMachine
-     * @return true if suspended
+     * @return true on success
      */
     public boolean suspend() {
+        return this.suspend(false);
+    }
+
+    /**
+     * Suspend the VirtualMachine
+     * @param useTools try to do a standby if tools are running
+     * @return true if suspended
+     */
+    public boolean suspend(boolean useTools) {
         // locals
         com.vmware.vim25.mo.Task t;
 
@@ -319,9 +328,14 @@ public class OrbitVirtualMachine {
             if (this.getPowerState() == VirtualMachinePowerState.suspended) {
                 return true;
             } else if (this.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                t = this.getVirtualMachine().suspendVM_Task();
-                if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
+                if (useTools && this.isToolsRunning()) {
+                    this.getVirtualMachine().standbyGuest();
                     return true;
+                } else {
+                    t = this.getVirtualMachine().suspendVM_Task();
+                    if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
+                        return true;
+                    }
                 }
             } else {
                 return false;
