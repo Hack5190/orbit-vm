@@ -162,7 +162,7 @@ public class OrbitVirtualMachine {
      */
     public String[] getGuestIPs() {
         // local
-        ArrayList result = new ArrayList();
+        ArrayList<String> result = new ArrayList<String>();
         GuestInfo gi = this.getGuestInfo();
         GuestNicInfo gni[] = gi.getNet();
 
