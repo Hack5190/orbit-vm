@@ -123,11 +123,8 @@ public class controllerFrame extends JFrame {
 	JPanel formPanels[], infoPanels[];
 
 	//TODO: auto refresh every 3 sec
-	//TODO: update info lables to match client
-        /*
-	Guest OS, CPU, Mem, Mem Overhead, VM Tools (no running, ok, unmaged),
-	IP Adresses, DNS Name, State, Host
-	 */
+	//TODO: update info lables to match client*
+	//TODO: fix odd spacing**
 	//TODO: confirm for reset and halt
 	//TODO: handle sucess/fail and don't hang
 
