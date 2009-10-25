@@ -66,7 +66,7 @@ public class OrbitVirtualMachineManager {
      */
     public OrbitVirtualMachine[] getVirtualMachinesByName(String name) {
 	// locals
-	ArrayList vms = new ArrayList();
+	ArrayList<OrbitVirtualMachine> vms = new ArrayList<OrbitVirtualMachine>();
 
 	for (OrbitVirtualMachine vm : this.getAllVirualMachines()) {
 	    boolean match = false;
@@ -96,7 +96,7 @@ public class OrbitVirtualMachineManager {
      */
     public OrbitVirtualMachine[] getVirtualMachinesByHost(HostSystem host) {
 	// locals
-	ArrayList vms = new ArrayList();
+	ArrayList<OrbitVirtualMachine> vms = new ArrayList<OrbitVirtualMachine>();
 
 	for (OrbitVirtualMachine vm : this.getAllVirualMachines()) {
 	    if (vm.getHost() == host) {
