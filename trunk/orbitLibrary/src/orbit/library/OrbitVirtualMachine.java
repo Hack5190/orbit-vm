@@ -156,7 +156,7 @@ public class OrbitVirtualMachine {
 	// local
 	GuestInfo gi = this.getGuestInfo();
 
-	return gi.getIpAddress();
+	return (gi.getIpAddress() == null) ? "" : gi.getIpAddress();
     }
 
     /**
