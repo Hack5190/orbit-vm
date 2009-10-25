@@ -133,7 +133,7 @@ public class OrbitVirtualMachine {
 	if (os == null || os.isEmpty()) {
 	    os = "Unknown";
 	}
-	
+
 	return os;
     }
 
@@ -169,6 +169,10 @@ public class OrbitVirtualMachine {
 	GuestInfo gi = this.getGuestInfo();
 	GuestNicInfo gni[] = gi.getNet();
 
+	if (gni == null) {
+	    return null;
+	}
+
 	// loop ip's
 	for (GuestNicInfo nic : gni) {
 	    for (String ip : nic.getIpAddress()) {
@@ -176,7 +180,11 @@ public class OrbitVirtualMachine {
 	    }
 	}
 
-	return (String[]) result.toArray();
+	// result
+	String[] resultArray = new String[1];
+	result.toArray(resultArray);
+	return resultArray;
+
     }
 
     /**
