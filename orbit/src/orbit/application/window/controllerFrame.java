@@ -124,7 +124,6 @@ public class controllerFrame extends JFrame {
 
 	//TODO: auto refresh every 3 sec
 	//TODO: update info lables to match client*
-	//TODO: fix odd spacing**
 	//TODO: confirm for reset and halt
 	//TODO: handle sucess/fail and don't hang
 
@@ -143,11 +142,9 @@ public class controllerFrame extends JFrame {
 	formLabels[2][0].setText("CPU:");
 	formLabels[3][0].setText("Memory:");
 	formLabels[4][0].setText("Memory Overhead:");
-	formLabels[4][0].setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 	formLabels[5][0].setText("VMware Tools:");
 	formLabels[6][0].setText("IP Addresses:");
 	formLabels[7][0].setText("DNS Name:");
-	formLabels[7][0].setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 	formLabels[8][0].setText("State:");
 	formLabels[9][0].setText("Host:");
 
@@ -198,14 +195,19 @@ public class controllerFrame extends JFrame {
 	    if (i < (formLabels.length - 1)) {
 		infoPanels[i] = new JPanel();
 		infoPanels[i].setLayout(new BorderLayout());
-		infoPanels[i].setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
-		formLabels[(i + 1)][0].setPreferredSize(new Dimension(120, 20));
+		//infoPanels[i].setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
+		formLabels[(i + 1)][0].setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+		formLabels[(i + 1)][0].setPreferredSize(new Dimension(125, 20));
 		infoPanels[i].add(formLabels[(i + 1)][0], BorderLayout.WEST);
 		infoPanels[i].add(formLabels[(i + 1)][1], BorderLayout.CENTER);
 		formPanels[i].add(infoPanels[i], BorderLayout.NORTH);
 	    }
 
 	}
+
+	// spacing
+	infoPanels[3].setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+	infoPanels[6].setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
 	vmGeneralPanel.add(formPanels[0], BorderLayout.CENTER);
 
@@ -236,27 +238,66 @@ public class controllerFrame extends JFrame {
      * @param vm VirtualMachine
      */
     public void showVM(OrbitVirtualMachine vm) {
-	/*
 
-	// host
-	formLabels[1][1].setText(vm.getHost().getName());
+	// guest os
+	formLabels[1][1].setText(vm.getGuestOSName());
 
-	// powerState
-	if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-	formLabels[2][1].setText("powered on");
-	formLabels[2][1].setForeground(Color.blue);
-	} else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-	formLabels[2][1].setText("suspended");
-	formLabels[2][1].setForeground(Color.yellow);
+	// hardware
+	formLabels[2][1].setText("?cpu");
+	formLabels[3][1].setText("?mem");
+	formLabels[4][1].setText("?memoverhead");
+
+	// tools
+	if (vm.isToolsInstalled()) {
+	    if (vm.isToolsRunning()) {
+		if (vm.isToolsUpgradable()) {
+		    formLabels[5][1].setText("Running (needs upgrade)");
+		} else if (vm.isToolsUnmanaged()) {
+		    formLabels[5][1].setText("Unmanaged");
+		} else {
+		    formLabels[5][1].setText("Running");
+		}
+	    } else {
+		formLabels[5][1].setText("Not Running");
+	    }
+
 	} else {
-	formLabels[2][1].setText("powered off");
-	formLabels[2][1].setForeground(Color.red);
+	    formLabels[5][1].setText("Not Installed");
 	}
 
+	// ips
+	formLabels[6][1].setText(vm.getGuestPrimaryIP());
+	if (vm.getGuestIPs() == null) {
+	    formLabels[6][1].setToolTipText("");
+	} else {
+	    String ips = "";
+	    for (String ip : vm.getGuestIPs()) {
+		if (!ips.isEmpty()) {
+		    ips = ips + ", ";
+		}
+		ips = ips + ip;
+	    }
+	    formLabels[6][1].setToolTipText(ips);
+	}
 
-	formLabels[3][1].setText((vm.getGuestInfo().getGuestFullName() == null) ? "-" : vm.getGuestInfo().getGuestFullName());
-	formLabels[4][1].setText((vm.getGuestInfo().getHostName() == null) ? "-" : vm.getGuestInfo().getHostName());
-	formLabels[5][1].setText((vm.getGuestInfo().getIpAddress() == null) ? "-" : vm.getGuestInfo().getIpAddress());
+	// dns
+	formLabels[7][1].setText(vm.getGuestHostName());
+
+	// state
+	if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+	    formLabels[8][1].setText("Powered On");
+	} else if (vm.getPowerState() == VirtualMachinePowerState.poweredOff) {
+	    formLabels[8][1].setText("Powered Off");
+	} else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
+	    formLabels[8][1].setText("Suspended");
+	} else {
+	    formLabels[8][1].setText("");
+	}
+
+	// host
+	formLabels[9][1].setText(vm.getHost().getName());
+
+	/*
 
 	// tools information
 	if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsNotInstalled) {
