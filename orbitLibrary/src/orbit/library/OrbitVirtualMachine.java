@@ -23,7 +23,7 @@ public class OrbitVirtualMachine {
      * @param vm Virtual Machine that you want to wrap
      */
     public OrbitVirtualMachine(VirtualMachine vm) {
-        this.vm = vm;
+	this.vm = vm;
     }
 
     /**
@@ -31,7 +31,7 @@ public class OrbitVirtualMachine {
      * @return the virtual machine
      */
     public VirtualMachine getVirtualMachine() {
-        return vm;
+	return vm;
     }
 
     /**
@@ -39,7 +39,7 @@ public class OrbitVirtualMachine {
      * @return name of virtual machine
      */
     public String getName() {
-        return vm.getName();
+	return vm.getName();
     }
 
     /**
@@ -47,7 +47,7 @@ public class OrbitVirtualMachine {
      * @return VitualMachinePowerState
      */
     public VirtualMachinePowerState getPowerState() {
-        return vm.getRuntime().getPowerState();
+	return vm.getRuntime().getPowerState();
     }
 
     /**
@@ -55,10 +55,10 @@ public class OrbitVirtualMachine {
      * @return guest state
      */
     public String getGuestState() {
-        // local
-        GuestInfo gi = this.getGuestInfo();
+	// local
+	GuestInfo gi = this.getGuestInfo();
 
-        return gi.getGuestState();
+	return gi.getGuestState();
     }
 
     /**
@@ -66,7 +66,7 @@ public class OrbitVirtualMachine {
      * @return Guest Info
      */
     public GuestInfo getGuestInfo() {
-        return vm.getGuest();
+	return vm.getGuest();
     }
 
     /**
@@ -74,10 +74,10 @@ public class OrbitVirtualMachine {
      * @return true if installed
      */
     public boolean isToolsInstalled() {
-        // local
-        GuestInfo gi = this.getGuestInfo();
+	// local
+	GuestInfo gi = this.getGuestInfo();
 
-        return !(gi.getToolsStatus() == VirtualMachineToolsStatus.toolsNotInstalled);
+	return !(gi.getToolsStatus() == VirtualMachineToolsStatus.toolsNotInstalled);
     }
 
     /**
@@ -86,10 +86,10 @@ public class OrbitVirtualMachine {
      * @return true if running
      */
     public boolean isToolsRunning() {
-        // local
-        GuestInfo gi = this.getGuestInfo();
+	// local
+	GuestInfo gi = this.getGuestInfo();
 
-        return !(gi.getToolsStatus() == VirtualMachineToolsStatus.toolsOk);
+	return !(gi.getToolsStatus() == VirtualMachineToolsStatus.toolsOk);
     }
 
     /**
@@ -97,10 +97,10 @@ public class OrbitVirtualMachine {
      * @return true if up to date
      */
     public boolean isToolsUpgradable() {
-        // local
-        GuestInfo gi = this.getGuestInfo();
+	// local
+	GuestInfo gi = this.getGuestInfo();
 
-        return (gi.getToolsStatus() == VirtualMachineToolsStatus.toolsOld);
+	return (gi.getToolsStatus() == VirtualMachineToolsStatus.toolsOld);
     }
 
     /**
@@ -108,10 +108,10 @@ public class OrbitVirtualMachine {
      * @return true if unmanaged
      */
     public boolean isToolsUnmanaged() {
-        // local
-        GuestInfo gi = this.getGuestInfo();
+	// local
+	GuestInfo gi = this.getGuestInfo();
 
-        return gi.getToolsVersionStatus().equals("guestToolsUnmanaged");
+	return gi.getToolsVersionStatus().equals("guestToolsUnmanaged");
     }
 
     /**
@@ -119,19 +119,22 @@ public class OrbitVirtualMachine {
      * @return os name
      */
     public String getGuestOSName() {
-        // locals
-        String os = "unknown";
-        GuestInfo gi = this.getGuestInfo();
+	// locals
+	String os;
+	GuestInfo gi = this.getGuestInfo();
 
-        os = gi.getGuestFullName();
-        if (os == null || os.isEmpty()) {
-            os = gi.getGuestFamily();
-        }
-        if (os == null | os.isEmpty()) {
-            os = gi.getGuestId();
-        }
-
-        return os;
+	os = gi.getGuestFullName();
+	if (os == null || os.isEmpty()) {
+	    os = gi.getGuestFamily();
+	}
+	if (os == null || os.isEmpty()) {
+	    os = gi.getGuestId();
+	}
+	if (os == null || os.isEmpty()) {
+	    os = "Unknown";
+	}
+	
+	return os;
     }
 
     /**
@@ -139,10 +142,10 @@ public class OrbitVirtualMachine {
      * @return hostname
      */
     public String getGuestHostName() {
-        // local
-        GuestInfo gi = this.getGuestInfo();
+	// local
+	GuestInfo gi = this.getGuestInfo();
 
-        return gi.getHostName();
+	return gi.getHostName();
     }
 
     /**
@@ -150,10 +153,10 @@ public class OrbitVirtualMachine {
      * @return primary ip
      */
     public String getGuestPrimaryIP() {
-        // local
-        GuestInfo gi = this.getGuestInfo();
+	// local
+	GuestInfo gi = this.getGuestInfo();
 
-        return gi.getIpAddress();
+	return gi.getIpAddress();
     }
 
     /**
@@ -161,19 +164,19 @@ public class OrbitVirtualMachine {
      * @return ip's of guest
      */
     public String[] getGuestIPs() {
-        // local
-        ArrayList<String> result = new ArrayList<String>();
-        GuestInfo gi = this.getGuestInfo();
-        GuestNicInfo gni[] = gi.getNet();
+	// local
+	ArrayList<String> result = new ArrayList<String>();
+	GuestInfo gi = this.getGuestInfo();
+	GuestNicInfo gni[] = gi.getNet();
 
-        // loop ip's
-        for (GuestNicInfo nic : gni) {
-            for (String ip : nic.getIpAddress()) {
-                result.add(ip);
-            }
-        }
+	// loop ip's
+	for (GuestNicInfo nic : gni) {
+	    for (String ip : nic.getIpAddress()) {
+		result.add(ip);
+	    }
+	}
 
-        return (String[]) result.toArray();
+	return (String[]) result.toArray();
     }
 
     /**
@@ -181,32 +184,32 @@ public class OrbitVirtualMachine {
      * @return host
      */
     public HostSystem getHost() {
-        // locals
-        HostSystem host;
-        Folder rootFolder;
+	// locals
+	HostSystem host;
+	Folder rootFolder;
 
-        try {
-            // locals
-            ManagedObjectReference hostMOR;
+	try {
+	    // locals
+	    ManagedObjectReference hostMOR;
 
-            rootFolder = vm.getServerConnection().getServiceInstance().getRootFolder();
-            ManagedEntity[] mes = new InventoryNavigator(rootFolder).searchManagedEntities("HostSystem");
-            if (mes == null || mes.length == 0) {
-                throw new NullPointerException();
-            }
+	    rootFolder = vm.getServerConnection().getServiceInstance().getRootFolder();
+	    ManagedEntity[] mes = new InventoryNavigator(rootFolder).searchManagedEntities("HostSystem");
+	    if (mes == null || mes.length == 0) {
+		throw new NullPointerException();
+	    }
 
-            host = null;
-            hostMOR = vm.getRuntime().getHost();
-            for (int i = 0; i < mes.length; i++) {
-                if (mes[i].getMOR().equals(hostMOR)) {
-                    host = (HostSystem) mes[i];
-                }
-            }
-        } catch (Exception e) {
-            return null;
-        }
+	    host = null;
+	    hostMOR = vm.getRuntime().getHost();
+	    for (int i = 0; i < mes.length; i++) {
+		if (mes[i].getMOR().equals(hostMOR)) {
+		    host = (HostSystem) mes[i];
+		}
+	    }
+	} catch (Exception e) {
+	    return null;
+	}
 
-        return host;
+	return host;
     }
 
     /**
@@ -214,22 +217,22 @@ public class OrbitVirtualMachine {
      * @return true if powered on
      */
     public Task powerOn() {
-        // locals
-        com.vmware.vim25.mo.Task t;
+	// locals
+	com.vmware.vim25.mo.Task t;
 
-        // start vm
-        try {
+	// start vm
+	try {
 
-            if (this.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                return null;
-            } else {
-                t = this.getVirtualMachine().powerOnVM_Task(null);
+	    if (this.getPowerState() == VirtualMachinePowerState.poweredOn) {
+		return null;
+	    } else {
+		t = this.getVirtualMachine().powerOnVM_Task(null);
 
 		return t;
-            }
-        } catch (Exception ex) {
-            return null;
-        }
+	    }
+	} catch (Exception ex) {
+	    return null;
+	}
     }
 
     /**
@@ -237,7 +240,7 @@ public class OrbitVirtualMachine {
      * @return true if powered off
      */
     public Task powerOff() {
-        return this.powerOff(false);
+	return this.powerOff(false);
     }
 
     /**
@@ -246,24 +249,24 @@ public class OrbitVirtualMachine {
      * @return true if powered off
      */
     public Task powerOff(boolean useTools) {
-        // locals
-        com.vmware.vim25.mo.Task t;
+	// locals
+	com.vmware.vim25.mo.Task t;
 
-        // stop vm
-        try {
-            if (this.getPowerState() == VirtualMachinePowerState.poweredOff) {
-                return null;
-            } else if (useTools && this.isToolsRunning()) {
-                this.getVirtualMachine().shutdownGuest();
-                return null;
-            } else {
-                t = this.getVirtualMachine().powerOffVM_Task();
+	// stop vm
+	try {
+	    if (this.getPowerState() == VirtualMachinePowerState.poweredOff) {
+		return null;
+	    } else if (useTools && this.isToolsRunning()) {
+		this.getVirtualMachine().shutdownGuest();
+		return null;
+	    } else {
+		t = this.getVirtualMachine().powerOffVM_Task();
 		return t;
 
-            }
-        } catch (Exception ex) {
-            return null;
-        }
+	    }
+	} catch (Exception ex) {
+	    return null;
+	}
     }
 
     /**
@@ -271,7 +274,7 @@ public class OrbitVirtualMachine {
      * @return true on success
      */
     public Task reset() {
-        return this.reset(false);
+	return this.reset(false);
     }
 
     /**
@@ -280,22 +283,22 @@ public class OrbitVirtualMachine {
      * @return true on success
      */
     public Task reset(boolean useTools) {
-        // locals
-        com.vmware.vim25.mo.Task t;
+	// locals
+	com.vmware.vim25.mo.Task t;
 
-        // stop vm
-        try {
-            if (useTools && this.isToolsRunning()) {
-                this.getVirtualMachine().rebootGuest();
-                return null;
-            } else {
-                t = this.getVirtualMachine().resetVM_Task();
-                return t;
+	// stop vm
+	try {
+	    if (useTools && this.isToolsRunning()) {
+		this.getVirtualMachine().rebootGuest();
+		return null;
+	    } else {
+		t = this.getVirtualMachine().resetVM_Task();
+		return t;
 
-            }
-        } catch (Exception ex) {
-            return null;
-        }
+	    }
+	} catch (Exception ex) {
+	    return null;
+	}
     }
 
     /**
@@ -303,7 +306,7 @@ public class OrbitVirtualMachine {
      * @return true on success
      */
     public Task suspend() {
-        return this.suspend(false);
+	return this.suspend(false);
     }
 
     /**
@@ -312,26 +315,26 @@ public class OrbitVirtualMachine {
      * @return true if suspended
      */
     public Task suspend(boolean useTools) {
-        // locals
-        com.vmware.vim25.mo.Task t;
+	// locals
+	com.vmware.vim25.mo.Task t;
 
-        // start vm
-        try {
-            if (this.getPowerState() == VirtualMachinePowerState.suspended) {
-                return null;
-            } else if (this.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                if (useTools && this.isToolsRunning()) {
-                    this.getVirtualMachine().standbyGuest();
-                    return null;
-                } else {
-                    t = this.getVirtualMachine().suspendVM_Task();
-                    return t;
-                }
-            } else {
-                return null;
-            }
-        } catch (Exception ex) {
-            return null;
-        }
+	// start vm
+	try {
+	    if (this.getPowerState() == VirtualMachinePowerState.suspended) {
+		return null;
+	    } else if (this.getPowerState() == VirtualMachinePowerState.poweredOn) {
+		if (useTools && this.isToolsRunning()) {
+		    this.getVirtualMachine().standbyGuest();
+		    return null;
+		} else {
+		    t = this.getVirtualMachine().suspendVM_Task();
+		    return t;
+		}
+	    } else {
+		return null;
+	    }
+	} catch (Exception ex) {
+	    return null;
+	}
     }
 }
