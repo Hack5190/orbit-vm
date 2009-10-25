@@ -89,7 +89,7 @@ public class OrbitVirtualMachine {
 	// local
 	GuestInfo gi = this.getGuestInfo();
 
-	return !(gi.getToolsStatus() == VirtualMachineToolsStatus.toolsOk);
+	return !(gi.getToolsStatus() == VirtualMachineToolsStatus.toolsNotRunning);
     }
 
     /**
