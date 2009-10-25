@@ -213,7 +213,7 @@ public class OrbitVirtualMachine {
      * Power On the VirtualMachine
      * @return true if powered on
      */
-    public boolean powerOn() {
+    public Task powerOn() {
         // locals
         com.vmware.vim25.mo.Task t;
 
@@ -221,24 +221,22 @@ public class OrbitVirtualMachine {
         try {
 
             if (this.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                return true;
+                return null;
             } else {
                 t = this.getVirtualMachine().powerOnVM_Task(null);
-                if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
-                    return true;
-                }
+
+		return t;
             }
         } catch (Exception ex) {
-            return false;
+            return null;
         }
-        return false;
     }
 
     /**
      * Power Off the VirtualMachine
      * @return true if powered off
      */
-    public boolean powerOff() {
+    public Task powerOff() {
         return this.powerOff(false);
     }
 
@@ -247,35 +245,32 @@ public class OrbitVirtualMachine {
      * @param useTools try to do shutdown if tools are running
      * @return true if powered off
      */
-    public boolean powerOff(boolean useTools) {
+    public Task powerOff(boolean useTools) {
         // locals
         com.vmware.vim25.mo.Task t;
 
         // stop vm
         try {
             if (this.getPowerState() == VirtualMachinePowerState.poweredOff) {
-                return true;
+                return null;
             } else if (useTools && this.isToolsRunning()) {
                 this.getVirtualMachine().shutdownGuest();
-                return true;
+                return null;
             } else {
                 t = this.getVirtualMachine().powerOffVM_Task();
-                if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
-                    return true;
-                }
+		return t;
 
             }
         } catch (Exception ex) {
-            return false;
+            return null;
         }
-        return false;
     }
 
     /**
      * Reset the VirtualMachine
      * @return true on success
      */
-    public boolean reset() {
+    public Task reset() {
         return this.reset(false);
     }
 
@@ -284,7 +279,7 @@ public class OrbitVirtualMachine {
      * @param useTools try to do a restart if tools are running
      * @return true on success
      */
-    public boolean reset(boolean useTools) {
+    public Task reset(boolean useTools) {
         // locals
         com.vmware.vim25.mo.Task t;
 
@@ -292,25 +287,22 @@ public class OrbitVirtualMachine {
         try {
             if (useTools && this.isToolsRunning()) {
                 this.getVirtualMachine().rebootGuest();
-                return true;
+                return null;
             } else {
                 t = this.getVirtualMachine().resetVM_Task();
-                if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
-                    return true;
-                }
+                return t;
 
             }
         } catch (Exception ex) {
-            return false;
+            return null;
         }
-        return false;
     }
 
     /**
      * Suspend the VirtualMachine
      * @return true on success
      */
-    public boolean suspend() {
+    public Task suspend() {
         return this.suspend(false);
     }
 
@@ -319,30 +311,27 @@ public class OrbitVirtualMachine {
      * @param useTools try to do a standby if tools are running
      * @return true if suspended
      */
-    public boolean suspend(boolean useTools) {
+    public Task suspend(boolean useTools) {
         // locals
         com.vmware.vim25.mo.Task t;
 
         // start vm
         try {
             if (this.getPowerState() == VirtualMachinePowerState.suspended) {
-                return true;
+                return null;
             } else if (this.getPowerState() == VirtualMachinePowerState.poweredOn) {
                 if (useTools && this.isToolsRunning()) {
                     this.getVirtualMachine().standbyGuest();
-                    return true;
+                    return null;
                 } else {
                     t = this.getVirtualMachine().suspendVM_Task();
-                    if (t.waitForMe().equalsIgnoreCase(Task.SUCCESS)) {
-                        return true;
-                    }
+                    return t;
                 }
             } else {
-                return false;
+                return null;
             }
         } catch (Exception ex) {
-            return false;
+            return null;
         }
-        return false;
     }
 }
