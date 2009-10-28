@@ -123,7 +123,7 @@ public class controllerFrame extends JFrame {
 	JPanel formPanels[], infoPanels[];
 
 	//TODO: auto refresh every 3 sec
-	//TODO: update info lables to match client*
+	//TODO: update items with ?xxx *
 	//TODO: confirm for reset and halt
 	//TODO: handle sucess/fail and don't hang
 
@@ -286,12 +286,16 @@ public class controllerFrame extends JFrame {
 	// state
 	if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
 	    formLabels[8][1].setText("Powered On");
+            formLabels[8][1].setForeground(new Color(77, 144, 61));
 	} else if (vm.getPowerState() == VirtualMachinePowerState.poweredOff) {
 	    formLabels[8][1].setText("Powered Off");
+            formLabels[8][1].setForeground(new Color(184, 45, 45));
 	} else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
 	    formLabels[8][1].setText("Suspended");
+            formLabels[8][1].setForeground(new Color(219, 174, 18));
 	} else {
 	    formLabels[8][1].setText("");
+            formLabels[8][1].setForeground(Color.black);
 	}
 
 	// host
