@@ -122,16 +122,16 @@ public class controllerFrame extends JFrame {
 
 	JPanel formPanels[], infoPanels[];
 
-	//TODO: auto refresh every 3 sec
-	//TODO: update items with ?xxx *
-	//TODO: confirm for reset and halt
-	//TODO: handle sucess/fail and don't hang
+        //TODO: action with dialogs for (reset/halt) and handle status
+        //TODO: general tab (running: cpu/mem used + extended tooltip, notes)
+        //TODO: better GuestOS
+        //TODO: auto refresh every 3 sec
 
 	// layout
 	content.setLayout(new BorderLayout(0, 0));
 
 	//labels
-	formLabels = new JLabel[10][2];
+	formLabels = new JLabel[9][2];
 	for (int i = 0; i < formLabels.length; i++) {
 	    for (int j = 0; j < formLabels[i].length; j++) {
 		formLabels[i][j] = new JLabel();
@@ -141,12 +141,11 @@ public class controllerFrame extends JFrame {
 	formLabels[1][0].setText("Guest OS:");
 	formLabels[2][0].setText("CPU:");
 	formLabels[3][0].setText("Memory:");
-	formLabels[4][0].setText("Memory Overhead:");
-	formLabels[5][0].setText("VMware Tools:");
-	formLabels[6][0].setText("IP Addresses:");
-	formLabels[7][0].setText("DNS Name:");
-	formLabels[8][0].setText("State:");
-	formLabels[9][0].setText("Host:");
+	formLabels[4][0].setText("VMware Tools:");
+	formLabels[5][0].setText("IP Addresses:");
+	formLabels[6][0].setText("DNS Name:");
+	formLabels[7][0].setText("State:");
+	formLabels[8][0].setText("Host:");
 
 	// header
 	try {
@@ -206,8 +205,8 @@ public class controllerFrame extends JFrame {
 	}
 
 	// spacing
-	infoPanels[3].setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-	infoPanels[6].setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+	infoPanels[2].setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+	infoPanels[5].setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
 	vmGeneralPanel.add(formPanels[0], BorderLayout.CENTER);
 
@@ -243,32 +242,31 @@ public class controllerFrame extends JFrame {
 	formLabels[1][1].setText(vm.getGuestOSName());
 
 	// hardware
-	formLabels[2][1].setText("?cpu");
-	formLabels[3][1].setText("?mem");
-	formLabels[4][1].setText("?memoverhead");
+	formLabels[2][1].setText(vm.getHardware().getNumCPU() + " vCPU");
+	formLabels[3][1].setText(vm.getHardware().getMemoryMB() + "MB");
 
 	// tools
 	if (vm.isToolsInstalled()) {
 	    if (vm.isToolsRunning()) {
 		if (vm.isToolsUpgradable()) {
-		    formLabels[5][1].setText("Running (needs upgrade)");
+		    formLabels[4][1].setText("Running (needs upgrade)");
 		} else if (vm.isToolsUnmanaged()) {
-		    formLabels[5][1].setText("Unmanaged");
+		    formLabels[4][1].setText("Unmanaged");
 		} else {
-		    formLabels[5][1].setText("Running");
+		    formLabels[4][1].setText("Running");
 		}
 	    } else {
-		formLabels[5][1].setText("Not Running");
+		formLabels[4][1].setText("Not Running");
 	    }
 
 	} else {
-	    formLabels[5][1].setText("Not Installed");
+	    formLabels[4][1].setText("Not Installed");
 	}
 
 	// ips
-	formLabels[6][1].setText(vm.getGuestPrimaryIP());
+	formLabels[5][1].setText(vm.getGuestPrimaryIP());
 	if (vm.getGuestIPs() == null) {
-	    formLabels[6][1].setToolTipText("");
+	    formLabels[5][1].setToolTipText("");
 	} else {
 	    String ips = "";
 	    for (String ip : vm.getGuestIPs()) {
@@ -277,98 +275,30 @@ public class controllerFrame extends JFrame {
 		}
 		ips = ips + ip;
 	    }
-	    formLabels[6][1].setToolTipText(ips);
+	    formLabels[5][1].setToolTipText(ips);
 	}
 
 	// dns
-	formLabels[7][1].setText(vm.getGuestHostName());
+	formLabels[6][1].setText(vm.getGuestHostName());
 
 	// state
 	if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-	    formLabels[8][1].setText("Powered On");
-            formLabels[8][1].setForeground(new Color(77, 144, 61));
+	    formLabels[7][1].setText("Powered On");
+            formLabels[7][1].setForeground(new Color(77, 144, 61));
 	} else if (vm.getPowerState() == VirtualMachinePowerState.poweredOff) {
-	    formLabels[8][1].setText("Powered Off");
-            formLabels[8][1].setForeground(new Color(184, 45, 45));
+	    formLabels[7][1].setText("Powered Off");
+            formLabels[7][1].setForeground(new Color(184, 45, 45));
 	} else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-	    formLabels[8][1].setText("Suspended");
-            formLabels[8][1].setForeground(new Color(219, 174, 18));
+	    formLabels[7][1].setText("Suspended");
+            formLabels[7][1].setForeground(new Color(219, 174, 18));
 	} else {
-	    formLabels[8][1].setText("");
-            formLabels[8][1].setForeground(Color.black);
+	    formLabels[7][1].setText("");
+            formLabels[7][1].setForeground(Color.black);
 	}
 
 	// host
-	formLabels[9][1].setText(vm.getHost().getName());
+	formLabels[8][1].setText(vm.getHost().getName());
 
-	/*
-
-	// tools information
-	if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsNotInstalled) {
-	formLabels[6][1].setText("not installed");
-	formLabels[6][1].setForeground(Color.orange);
-	} else if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsNotRunning) {
-	formLabels[6][1].setText("not running");
-	formLabels[6][1].setForeground(Color.red);
-	} else if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOld) {
-	formLabels[6][1].setText("running, needs upgrade");
-	formLabels[6][1].setForeground(Color.yellow);
-	} else if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
-	if (vm.getGuestInfo().getToolsVersionStatus().equals("guestToolsUnmanaged")) {
-	formLabels[6][1].setText("running, unmanaged");
-	} else {
-	formLabels[6][1].setText("running");
-	}
-	formLabels[6][1].setForeground(Color.blue);
-	} else {
-	formLabels[6][1].setText("unknown");
-	formLabels[6][1].setForeground(null);
-	}
-
-	// update toolbar
-	startButton.setVisible(true);
-	stopButton.setVisible(true);
-	resetButton.setVisible(true);
-	try {
-	if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-	startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-suspend.png")));
-	} else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-	startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
-	} else {
-	startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
-	}
-	resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-reset.png")));
-	stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweroff.png")));
-
-	} catch (Exception e) {
-	if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-	startButton.setText("Suspend");
-	} else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-	startButton.setText("Power On");
-	} else {
-	startButton.setText("Power On");
-	}
-	if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
-	resetButton.setText("Restart");
-	} else {
-	resetButton.setText("Reset");
-	}
-	if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
-	resetButton.setText("Shutdown");
-	} else {
-	resetButton.setText("Power Off");
-	}
-
-	} finally {
-	if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-	} else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-	stopButton.setVisible(false);
-	} else {
-	stopButton.setVisible(false);
-	resetButton.setVisible(false);
-	}
-	}
-	 */
     }
 
     /**
