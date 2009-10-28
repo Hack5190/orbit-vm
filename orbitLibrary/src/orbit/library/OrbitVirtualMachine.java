@@ -51,19 +51,19 @@ public class OrbitVirtualMachine {
     }
 
     /**
-     * Get the guest config
-     * @return guest config
+     * Get the guest VirtualHardware
+     * @return guest VirtualHardware
      */
-    public VirtualMachineConfigInfo getConfig() {
+    public VirtualHardware getHardware() {
         // local
-        VirtualMachineConfigInfo gc;
+        VirtualHardware vh;
         try {
-            gc = this.vm.getConfig();
+            vh = this.vm.getConfig().getHardware();
         } catch (Exception e) {
-            gc = null;
+            vh = null;
         }
 
-        return gc;
+        return vh;
     }
 
     /**
