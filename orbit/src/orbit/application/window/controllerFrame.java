@@ -316,6 +316,46 @@ public class controllerFrame extends JFrame {
             notesArea.setText("");
         }
 
+        // toolbar
+        startButton.setVisible(true);
+        stopButton.setVisible(true);
+        resetButton.setVisible(true);
+        try {
+            if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-suspend.png")));
+            } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
+                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
+            } else {
+                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
+            }
+            resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-reset.png")));
+            stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweroff.png")));
+        } catch (Exception e) {
+            if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+                startButton.setText("Suspend");
+            } else {
+                startButton.setText("Power On");
+            }
+            if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+                resetButton.setText("Restart");
+            } else {
+                resetButton.setText("Reset");
+            }
+            if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+                stopButton.setText("Shutdown");
+            } else {
+                stopButton.setText("Power Off");
+            }
+
+        } finally {
+            if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+            } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
+                stopButton.setVisible(false);
+            } else {
+                stopButton.setVisible(false);
+                resetButton.setVisible(false);
+            }
+        }
     }
 
     /**
