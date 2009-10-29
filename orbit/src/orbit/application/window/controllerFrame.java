@@ -239,121 +239,132 @@ public class controllerFrame extends JFrame {
         vmControlToolBar.add(resetButton);
 
         // load data
-        showVM(virtualMachines[virtualMachineCombo.getSelectedIndex()]);
+        new ShowVM().start();
     }
 
     /**
      * Show VirtualMachine information
      * @param vm VirtualMachine
      */
-    public void showVM(OrbitVirtualMachine vm) {
+    class ShowVM extends Thread {
 
-        // guest os
-        generalInfoLabels[1][1].setText(vm.getGuestOSName());
+        public ShowVM() {
+            //TODO: cleanup old form before redraw?
+        }
 
-        // hardware
-        generalInfoLabels[2][1].setText(vm.getHardware().getNumCPU() + " vCPU");
-        generalInfoLabels[3][1].setText(vm.getHardware().getMemoryMB() + "MB");
+        @Override
+        public void run() {
 
-        // tools
-        if (vm.isToolsInstalled()) {
-            if (vm.isToolsRunning()) {
-                if (vm.isToolsUpgradable()) {
-                    generalInfoLabels[4][1].setText("Running (needs upgrade)");
-                } else if (vm.isToolsUnmanaged()) {
-                    generalInfoLabels[4][1].setText("Unmanaged");
+            // ger vm
+            OrbitVirtualMachine vm = virtualMachines[virtualMachineCombo.getSelectedIndex()];
+
+            // guest os
+            generalInfoLabels[1][1].setText(vm.getGuestOSName());
+
+            // hardware
+            generalInfoLabels[2][1].setText(vm.getHardware().getNumCPU() + " vCPU");
+            generalInfoLabels[3][1].setText(vm.getHardware().getMemoryMB() + "MB");
+
+            // tools
+            if (vm.isToolsInstalled()) {
+                if (vm.isToolsRunning()) {
+                    if (vm.isToolsUpgradable()) {
+                        generalInfoLabels[4][1].setText("Running (needs upgrade)");
+                    } else if (vm.isToolsUnmanaged()) {
+                        generalInfoLabels[4][1].setText("Unmanaged");
+                    } else {
+                        generalInfoLabels[4][1].setText("Running");
+                    }
                 } else {
-                    generalInfoLabels[4][1].setText("Running");
+                    generalInfoLabels[4][1].setText("Not Running");
                 }
+
             } else {
-                generalInfoLabels[4][1].setText("Not Running");
+                generalInfoLabels[4][1].setText("Not Installed");
             }
 
-        } else {
-            generalInfoLabels[4][1].setText("Not Installed");
-        }
-
-        // ips
-        generalInfoLabels[5][1].setText(vm.getGuestPrimaryIP());
-        if (vm.getGuestIPs() == null) {
-            generalInfoLabels[5][1].setToolTipText("");
-        } else {
-            String ips = "";
-            for (String ip : vm.getGuestIPs()) {
-                if (!ips.isEmpty()) {
-                    ips = ips + ", ";
+            // ips
+            generalInfoLabels[5][1].setText(vm.getGuestPrimaryIP());
+            if (vm.getGuestIPs() == null) {
+                generalInfoLabels[5][1].setToolTipText("");
+            } else {
+                String ips = "";
+                for (String ip : vm.getGuestIPs()) {
+                    if (!ips.isEmpty()) {
+                        ips = ips + ", ";
+                    }
+                    ips = ips + ip;
                 }
-                ips = ips + ip;
+                generalInfoLabels[5][1].setToolTipText(ips);
             }
-            generalInfoLabels[5][1].setToolTipText(ips);
-        }
 
-        // dns
-        generalInfoLabels[6][1].setText(vm.getGuestHostName());
+            // dns
+            generalInfoLabels[6][1].setText(vm.getGuestHostName());
 
-        // state
-        if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-            generalInfoLabels[7][1].setText("Powered On");
-            generalInfoLabels[7][1].setForeground(new Color(77, 144, 61));
-        } else if (vm.getPowerState() == VirtualMachinePowerState.poweredOff) {
-            generalInfoLabels[7][1].setText("Powered Off");
-            generalInfoLabels[7][1].setForeground(new Color(184, 45, 45));
-        } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-            generalInfoLabels[7][1].setText("Suspended");
-            generalInfoLabels[7][1].setForeground(new Color(219, 174, 18));
-        } else {
-            generalInfoLabels[7][1].setText("");
-            generalInfoLabels[7][1].setForeground(Color.black);
-        }
-
-        // host
-        generalInfoLabels[8][1].setText(vm.getHost().getName());
-
-        // notes
-        try {
-            notesArea.setText(vm.getVirtualMachine().getSummary().getConfig().getAnnotation());
-        } catch (Exception e) {
-            notesArea.setText("");
-        }
-
-        // toolbar
-        startButton.setVisible(true);
-        stopButton.setVisible(true);
-        resetButton.setVisible(true);
-        try {
+            // state
             if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-suspend.png")));
+                generalInfoLabels[7][1].setText("Powered On");
+                generalInfoLabels[7][1].setForeground(new Color(77, 144, 61));
+            } else if (vm.getPowerState() == VirtualMachinePowerState.poweredOff) {
+                generalInfoLabels[7][1].setText("Powered Off");
+                generalInfoLabels[7][1].setForeground(new Color(184, 45, 45));
             } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
+                generalInfoLabels[7][1].setText("Suspended");
+                generalInfoLabels[7][1].setForeground(new Color(219, 174, 18));
             } else {
-                startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
-            }
-            resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-reset.png")));
-            stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweroff.png")));
-        } catch (Exception e) {
-            if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                startButton.setText("Suspend");
-            } else {
-                startButton.setText("Power On");
-            }
-            if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
-                resetButton.setText("Restart");
-            } else {
-                resetButton.setText("Reset");
-            }
-            if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
-                stopButton.setText("Shutdown");
-            } else {
-                stopButton.setText("Power Off");
+                generalInfoLabels[7][1].setText("");
+                generalInfoLabels[7][1].setForeground(Color.black);
             }
 
-        } finally {
-            if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-            } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-                stopButton.setVisible(false);
-            } else {
-                stopButton.setVisible(false);
-                resetButton.setVisible(false);
+            // host
+            generalInfoLabels[8][1].setText(vm.getHost().getName());
+
+            // notes
+            try {
+                notesArea.setText(vm.getVirtualMachine().getSummary().getConfig().getAnnotation());
+            } catch (Exception e) {
+                notesArea.setText("");
+            }
+
+            // toolbar
+            startButton.setVisible(true);
+            stopButton.setVisible(true);
+            resetButton.setVisible(true);
+            try {
+                if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+                    startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-suspend.png")));
+                } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
+                    startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
+                } else {
+                    startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
+                }
+                resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-reset.png")));
+                stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweroff.png")));
+            } catch (Exception e) {
+                if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+                    startButton.setText("Suspend");
+                } else {
+                    startButton.setText("Power On");
+                }
+                if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+                    resetButton.setText("Restart");
+                } else {
+                    resetButton.setText("Reset");
+                }
+                if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+                    stopButton.setText("Shutdown");
+                } else {
+                    stopButton.setText("Power Off");
+                }
+
+            } finally {
+                if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+                } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
+                    stopButton.setVisible(false);
+                } else {
+                    stopButton.setVisible(false);
+                    resetButton.setVisible(false);
+                }
             }
         }
     }
@@ -410,7 +421,7 @@ public class controllerFrame extends JFrame {
         }
 
         public void actionPerformed(ActionEvent e) {
-            showVM(virtualMachines[virtualMachineCombo.getSelectedIndex()]);
+            new ShowVM();
         }
     }
 }
