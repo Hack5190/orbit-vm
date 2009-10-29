@@ -124,8 +124,8 @@ public class controllerFrame extends JFrame {
 
         JPanel formPanels[], infoPanels[];
 
-        //TODO: action with dialogs for (reset/halt) and handle status
-        //TODO: general tab (running: cpu/mem used + extended tooltip)
+        //TODO: window catch focus to stop/start timeout?
+        //TODO: action with dialogs halt/shutdown/reset/restart
         //TODO: resource tab (with advance labels??)
         
         // layout
@@ -345,10 +345,6 @@ public class controllerFrame extends JFrame {
             }
 
             // toolbar
-            //TODO: start invisible
-            startButton.setVisible(true);
-            stopButton.setVisible(true);
-            resetButton.setVisible(true);
             try {
                 if (vp == VirtualMachinePowerState.poweredOn) {
                     startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-suspend.png")));
@@ -378,8 +374,8 @@ public class controllerFrame extends JFrame {
 
             } finally {
                 if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-                    stopButton.setVisible(false);
+                    stopButton.setVisible(true);
+                    resetButton.setVisible(true);
                 } else {
                     stopButton.setVisible(false);
                     resetButton.setVisible(false);
