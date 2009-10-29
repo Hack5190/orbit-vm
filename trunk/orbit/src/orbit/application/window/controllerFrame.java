@@ -274,6 +274,60 @@ public class controllerFrame extends JFrame {
             // get vm
             OrbitVirtualMachine vm = virtualMachines[virtualMachineCombo.getSelectedIndex()];
 
+            // toolbar
+            vp = vm.getPowerState();
+            try {
+                if (vp == VirtualMachinePowerState.poweredOn) {
+                    startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-suspend.png")));
+                } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
+                    startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
+                } else {
+                    startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
+                }
+                resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-reset.png")));
+                stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweroff.png")));
+            } catch (Exception e) {
+                if (vp == VirtualMachinePowerState.poweredOn) {
+                    startButton.setText("Suspend");
+                } else {
+                    startButton.setText("Power On");
+                }
+                if (vm.isToolsRunning()) {
+                    resetButton.setText("Restart");
+                } else {
+                    resetButton.setText("Reset");
+                }
+                if (vm.isToolsRunning()) {
+                    stopButton.setText("Shutdown");
+                } else {
+                    stopButton.setText("Power Off");
+                }
+
+            } finally {
+                if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+                    stopButton.setEnabled(true);
+                    resetButton.setEnabled(true);
+                } else {
+                    stopButton.setEnabled(false);
+                    resetButton.setEnabled(false);
+                }
+            }
+
+            // powerstate
+            if (vp == VirtualMachinePowerState.poweredOn) {
+                generalInfoLabels[7][1].setText("Powered On");
+                generalInfoLabels[7][1].setForeground(new Color(77, 144, 61));
+            } else if (vp == VirtualMachinePowerState.poweredOff) {
+                generalInfoLabels[7][1].setText("Powered Off");
+                generalInfoLabels[7][1].setForeground(new Color(184, 45, 45));
+            } else if (vp == VirtualMachinePowerState.suspended) {
+                generalInfoLabels[7][1].setText("Suspended");
+                generalInfoLabels[7][1].setForeground(new Color(219, 174, 18));
+            } else {
+                generalInfoLabels[7][1].setText("");
+                generalInfoLabels[7][1].setForeground(Color.black);
+            }
+
             // guest os
             generalInfoLabels[1][1].setText(vm.getGuestOSName());
 
@@ -318,22 +372,6 @@ public class controllerFrame extends JFrame {
             // dns
             generalInfoLabels[6][1].setText(vm.getGuestHostName());
 
-            // state
-            vp = vm.getPowerState();
-            if (vp == VirtualMachinePowerState.poweredOn) {
-                generalInfoLabels[7][1].setText("Powered On");
-                generalInfoLabels[7][1].setForeground(new Color(77, 144, 61));
-            } else if (vp == VirtualMachinePowerState.poweredOff) {
-                generalInfoLabels[7][1].setText("Powered Off");
-                generalInfoLabels[7][1].setForeground(new Color(184, 45, 45));
-            } else if (vp == VirtualMachinePowerState.suspended) {
-                generalInfoLabels[7][1].setText("Suspended");
-                generalInfoLabels[7][1].setForeground(new Color(219, 174, 18));
-            } else {
-                generalInfoLabels[7][1].setText("");
-                generalInfoLabels[7][1].setForeground(Color.black);
-            }
-
             // host
             generalInfoLabels[8][1].setText(vm.getHost().getName());
 
@@ -342,44 +380,6 @@ public class controllerFrame extends JFrame {
                 notesArea.setText(vm.getVirtualMachine().getSummary().getConfig().getAnnotation());
             } catch (Exception e) {
                 notesArea.setText("");
-            }
-
-            // toolbar
-            try {
-                if (vp == VirtualMachinePowerState.poweredOn) {
-                    startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-suspend.png")));
-                } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
-                    startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
-                } else {
-                    startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
-                }
-                resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-reset.png")));
-                stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweroff.png")));
-            } catch (Exception e) {
-                if (vp == VirtualMachinePowerState.poweredOn) {
-                    startButton.setText("Suspend");
-                } else {
-                    startButton.setText("Power On");
-                }
-                if (vm.isToolsRunning()) {
-                    resetButton.setText("Restart");
-                } else {
-                    resetButton.setText("Reset");
-                }
-                if (vm.isToolsRunning()) {
-                    stopButton.setText("Shutdown");
-                } else {
-                    stopButton.setText("Power Off");
-                }
-
-            } finally {
-                if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                    stopButton.setVisible(true);
-                    resetButton.setVisible(true);
-                } else {
-                    stopButton.setVisible(false);
-                    resetButton.setVisible(false);
-                }
             }
 
             // run timer
