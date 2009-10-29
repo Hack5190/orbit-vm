@@ -126,7 +126,6 @@ public class controllerFrame extends JFrame {
         //TODO: action with dialogs for (reset/halt) and handle status
         //TODO: general tab (running: cpu/mem used + extended tooltip)
         //TODO: clearn info, then load new (to make the gui not look stuck, maybe in thread)
-        //TODO: better GuestOS
         //TODO: auto refresh every 3 sec
 
         // layout
@@ -239,7 +238,7 @@ public class controllerFrame extends JFrame {
         vmControlToolBar.add(resetButton);
 
         // load data
-        new ShowVM().start();
+        new ShowVM(true).start();
     }
 
     /**
@@ -248,17 +247,24 @@ public class controllerFrame extends JFrame {
      */
     class ShowVM extends Thread {
 
-        public ShowVM() {
+        public ShowVM(boolean clearLabels) {
 
-            notesArea.setText("");
-            for (int i = 0; i < generalInfoLabels.length; i++) {
-                generalInfoLabels[i][1].setText("");
+            if (clearLabels) {
+                notesArea.setText("");
+
+                for (int i = 0; i < generalInfoLabels.length; i++) {
+                    generalInfoLabels[i][1].setText("");
+                }
             }
         }
 
         @Override
         public void run() {
             //TODO: try to speed up by eliminate multiple getXXX()
+
+            // locals
+            VirtualHardware vh;
+            VirtualMachinePowerState vp;
 
             // ger vm
             OrbitVirtualMachine vm = virtualMachines[virtualMachineCombo.getSelectedIndex()];
@@ -267,8 +273,9 @@ public class controllerFrame extends JFrame {
             generalInfoLabels[1][1].setText(vm.getGuestOSName());
 
             // hardware
-            generalInfoLabels[2][1].setText(vm.getHardware().getNumCPU() + " vCPU");
-            generalInfoLabels[3][1].setText(vm.getHardware().getMemoryMB() + "MB");
+            vh = vm.getHardware();
+            generalInfoLabels[2][1].setText(vh.getNumCPU() + " vCPU");
+            generalInfoLabels[3][1].setText(vh.getMemoryMB() + "MB");
 
             // tools
             if (vm.isToolsInstalled()) {
@@ -307,13 +314,14 @@ public class controllerFrame extends JFrame {
             generalInfoLabels[6][1].setText(vm.getGuestHostName());
 
             // state
-            if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+            vp = vm.getPowerState();
+            if (vp == VirtualMachinePowerState.poweredOn) {
                 generalInfoLabels[7][1].setText("Powered On");
                 generalInfoLabels[7][1].setForeground(new Color(77, 144, 61));
-            } else if (vm.getPowerState() == VirtualMachinePowerState.poweredOff) {
+            } else if (vp == VirtualMachinePowerState.poweredOff) {
                 generalInfoLabels[7][1].setText("Powered Off");
                 generalInfoLabels[7][1].setForeground(new Color(184, 45, 45));
-            } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
+            } else if (vp == VirtualMachinePowerState.suspended) {
                 generalInfoLabels[7][1].setText("Suspended");
                 generalInfoLabels[7][1].setForeground(new Color(219, 174, 18));
             } else {
@@ -332,11 +340,12 @@ public class controllerFrame extends JFrame {
             }
 
             // toolbar
+            //TODO: start invisible
             startButton.setVisible(true);
             stopButton.setVisible(true);
             resetButton.setVisible(true);
             try {
-                if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+                if (vp == VirtualMachinePowerState.poweredOn) {
                     startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-suspend.png")));
                 } else if (vm.getPowerState() == VirtualMachinePowerState.suspended) {
                     startButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweron.png")));
@@ -346,17 +355,17 @@ public class controllerFrame extends JFrame {
                 resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-reset.png")));
                 stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweroff.png")));
             } catch (Exception e) {
-                if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+                if (vp == VirtualMachinePowerState.poweredOn) {
                     startButton.setText("Suspend");
                 } else {
                     startButton.setText("Power On");
                 }
-                if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+                if (vm.isToolsRunning()) {
                     resetButton.setText("Restart");
                 } else {
                     resetButton.setText("Reset");
                 }
-                if (vm.getGuestInfo().getToolsStatus() == VirtualMachineToolsStatus.toolsOk) {
+                if (vm.isToolsRunning()) {
                     stopButton.setText("Shutdown");
                 } else {
                     stopButton.setText("Power Off");
@@ -426,7 +435,7 @@ public class controllerFrame extends JFrame {
         }
 
         public void actionPerformed(ActionEvent e) {
-            new ShowVM().start();
+            new ShowVM(true).start();
         }
     }
 }
