@@ -258,6 +258,7 @@ public class controllerFrame extends JFrame {
 
         @Override
         public void run() {
+            //TODO: try to speed up by eliminate multiple getXXX()
 
             // ger vm
             OrbitVirtualMachine vm = virtualMachines[virtualMachineCombo.getSelectedIndex()];
