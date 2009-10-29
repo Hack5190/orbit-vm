@@ -249,7 +249,11 @@ public class controllerFrame extends JFrame {
     class ShowVM extends Thread {
 
         public ShowVM() {
-            //TODO: cleanup old form before redraw?
+
+            notesArea.setText("");
+            for (int i = 0; i < generalInfoLabels.length; i++) {
+                generalInfoLabels[i][1].setText("");
+            }
         }
 
         @Override
@@ -421,7 +425,7 @@ public class controllerFrame extends JFrame {
         }
 
         public void actionPerformed(ActionEvent e) {
-            new ShowVM();
+            new ShowVM().start();
         }
     }
 }
