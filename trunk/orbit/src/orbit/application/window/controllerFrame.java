@@ -37,6 +37,7 @@ public class controllerFrame extends JFrame {
     private JComboBox virtualMachineCombo;
     private JLabel generalInfoLabels[][];
     private JTextArea notesArea;
+    private VMUpdateTimer vut;
 
     /**
      * controllerFrame Constructor
@@ -125,9 +126,8 @@ public class controllerFrame extends JFrame {
 
         //TODO: action with dialogs for (reset/halt) and handle status
         //TODO: general tab (running: cpu/mem used + extended tooltip)
-        //TODO: clearn info, then load new (to make the gui not look stuck, maybe in thread)
-        //TODO: auto refresh every 3 sec
-
+        //TODO: resource tab (with advance labels??)
+        
         // layout
         content.setLayout(new BorderLayout(0, 0));
 
@@ -249,6 +249,10 @@ public class controllerFrame extends JFrame {
 
         public ShowVM(boolean clearLabels) {
 
+            if (vut == null) {
+                vut = new VMUpdateTimer(3000, false);
+            }
+
             if (clearLabels) {
                 notesArea.setText("");
 
@@ -260,13 +264,14 @@ public class controllerFrame extends JFrame {
 
         @Override
         public void run() {
-            //TODO: try to speed up by eliminate multiple getXXX()
-
             // locals
             VirtualHardware vh;
             VirtualMachinePowerState vp;
 
-            // ger vm
+            // stop timer
+            vut.getTimer().stop();
+
+            // get vm
             OrbitVirtualMachine vm = virtualMachines[virtualMachineCombo.getSelectedIndex()];
 
             // guest os
@@ -380,6 +385,30 @@ public class controllerFrame extends JFrame {
                     resetButton.setVisible(false);
                 }
             }
+
+            // run timer
+            vut.getTimer().start();
+        }
+    }
+
+    class VMUpdateTimer implements ActionListener {
+
+        // locals
+        javax.swing.Timer t;
+
+        public VMUpdateTimer(int interval, boolean start) {
+            t = new javax.swing.Timer(interval, this);
+            if (start) {
+                t.start();
+            }
+        }
+
+        public javax.swing.Timer getTimer() {
+            return t;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            new ShowVM(false).start();
         }
     }
 
