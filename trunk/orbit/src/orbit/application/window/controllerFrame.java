@@ -139,7 +139,6 @@ public class controllerFrame extends JFrame {
 
         JPanel formPanels[], infoPanels[];
 
-        //TODO: action with dialogs halt/shutdown/reset/restart
         //TODO: resource tab (with advance labels??)
 
         // layout
@@ -445,17 +444,37 @@ public class controllerFrame extends JFrame {
                 if (vm != null) {
                     if (action.equalsIgnoreCase("start")) {
                         if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                            vm.suspend();
+                            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to suspend this vm?") == JOptionPane.YES_OPTION) {
+                                vm.suspend();
+                            }
                         } else {
                             vm.powerOn();
                         }
                     } else if (action.equalsIgnoreCase("stop")) {
                         if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                            vm.powerOff(true);
+                            String actionString = "";
+                            if (vm.isToolsRunning()) {
+                                actionString = "shutdown";
+                            } else {
+                                actionString = "power off";
+                            }
+
+                            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to " + actionString + " this vm?") == JOptionPane.YES_OPTION) {
+                                vm.powerOff(true);
+                            }
                         }
                     } else if (action.equalsIgnoreCase("reset")) {
                         if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
-                            vm.reset(true);
+                            String actionString = "";
+                            if (vm.isToolsRunning()) {
+                                actionString = "restart";
+                            } else {
+                                actionString = "reset";
+                            }
+
+                            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to " + actionString + " this vm?") == JOptionPane.YES_OPTION) {
+                                vm.reset(true);
+                            }
                         }
                     }
                 }
