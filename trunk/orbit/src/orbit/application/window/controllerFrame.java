@@ -73,6 +73,21 @@ public class controllerFrame extends JFrame {
                     window.dispose();
                 }
             }
+
+            @Override
+            public void windowDeiconified(WindowEvent w) {
+                if (vut != null) { // update and restart timer
+                    new ShowVM(false).start();
+                    vut.getTimer().start();
+                }
+            }
+
+            @Override
+            public void windowIconified(WindowEvent w) {
+                if (vut != null) { // stop timer
+                    vut.getTimer().stop();
+                }
+            }
         });
         window.setResizable(false);
         window.setSize(new Dimension(600, 360));
@@ -124,10 +139,9 @@ public class controllerFrame extends JFrame {
 
         JPanel formPanels[], infoPanels[];
 
-        //TODO: window catch focus to stop/start timeout?
         //TODO: action with dialogs halt/shutdown/reset/restart
         //TODO: resource tab (with advance labels??)
-        
+
         // layout
         content.setLayout(new BorderLayout(0, 0));
 
