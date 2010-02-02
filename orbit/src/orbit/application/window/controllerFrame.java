@@ -272,7 +272,12 @@ public class controllerFrame extends JFrame {
                 for (int i = 0; i < generalInfoLabels.length; i++) {
                     generalInfoLabels[i][1].setText("");
                 }
+
+		//TODO: loop and clear resource labels
             }
+
+	    if (clearLabels)
+		virtualMachineCombo.setEnabled(false);
         }
 
         @Override
@@ -396,6 +401,7 @@ public class controllerFrame extends JFrame {
             }
 
             // run timer
+	    virtualMachineCombo.setEnabled(true);
             vut.getTimer().start();
         }
     }
