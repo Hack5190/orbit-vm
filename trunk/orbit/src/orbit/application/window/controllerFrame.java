@@ -404,6 +404,10 @@ public class controllerFrame extends JFrame {
                 notesArea.setText("");
             }
 
+	    // testing
+	    notesArea.setText("");
+
+
             // run timer
 	    virtualMachineCombo.setEnabled(true);
             vut.getTimer().start();
