@@ -271,6 +271,7 @@ public class controllerFrame extends JFrame {
 
                 for (int i = 0; i < generalInfoLabels.length; i++) {
                     generalInfoLabels[i][1].setText("");
+		    generalInfoLabels[i][1].setToolTipText("");
                 }
 
 		//TODO: loop and clear resource labels
@@ -348,6 +349,7 @@ public class controllerFrame extends JFrame {
 
             // guest os
             generalInfoLabels[1][1].setText(vm.getGuestOSName());
+	    generalInfoLabels[1][1].setToolTipText(vm.getGuestOSName());
 
             // hardware
             vh = vm.getHardware();
@@ -372,6 +374,8 @@ public class controllerFrame extends JFrame {
                 generalInfoLabels[4][1].setText("Not Installed");
             }
 
+	    // TODO: tooltip for mutliple ip's
+
             // ips
             generalInfoLabels[5][1].setText(vm.getGuestPrimaryIP());
             if (vm.getGuestIPs() == null) {
@@ -389,9 +393,11 @@ public class controllerFrame extends JFrame {
 
             // dns
             generalInfoLabels[6][1].setText(vm.getGuestHostName());
+	    generalInfoLabels[6][1].setToolTipText(vm.getGuestHostName());
 
             // host
             generalInfoLabels[8][1].setText(vm.getHost().getName());
+	    generalInfoLabels[8][1].setToolTipText(vm.getHost().getName());
 
             // notes
             try {
