@@ -348,6 +348,8 @@ public class controllerFrame extends JFrame {
 	    // locals
 	    VirtualHardware vh;
 	    VirtualMachinePowerState vp;
+	    String[] stringSize = {"KB", "MB", "GB", "TB"};
+	    long div = 0;
 
 	    // stop timer
 	    vut.getTimer().stop();
@@ -475,6 +477,43 @@ public class controllerFrame extends JFrame {
 	    // memory active
 	    resourceInfoLabels[2][1].setText(vm.getVirtualMachine().getSummary().getQuickStats().guestMemoryUsage + " MB");
 
+	    // storage
+	    double diskNonShared = 0, diskUsed = 0, diskProv = 0;
+	    for (VirtualMachineUsageOnDatastore vmuod : vm.getVirtualMachine().getStorage().getPerDatastoreUsage()) {
+		diskNonShared += vmuod.getUnshared();
+		diskUsed += vmuod.getCommitted();
+		diskProv += (vmuod.getUncommitted() + vmuod.getCommitted());
+	    }
+
+	    // diskprov
+	    div = 1024L;
+	    for (int i = 0; i < 3; i++) {
+		if ( (double)(diskProv / div) <= 1024d ) {
+		    resourceInfoLabels[3][1].setText(String.format("%.2f %s", (double)(diskProv / div) , stringSize[i]));
+		    break;
+		}
+		div *= 1024L;
+	    }
+
+	    // disk non share
+	    div = 1024L;
+	    for (int i = 0; i < 3; i++) {
+		if ( (double)(diskNonShared / div) <= 1024d ) {
+		    resourceInfoLabels[4][1].setText(String.format("%.2f %s", (double)(diskNonShared / div), stringSize[i]));
+		    break;
+		}
+		div *= 1024L;
+	    }
+
+	    // disk used
+	    div = 1024L;
+	    for (int i = 0; i < 3; i++) {
+		if ( (double)(diskUsed / div) <= 1024d ) {
+		    resourceInfoLabels[5][1].setText(String.format("%.2f %s", (double)(diskUsed / div), stringSize[i]));
+		    break;
+		}
+		div *= 1024L;
+	    }
 
 	    // run timer
 	    virtualMachineCombo.setEnabled(true);
