@@ -320,7 +320,10 @@ public class controllerFrame extends JFrame {
 		    generalInfoLabels[i][1].setToolTipText("");
                 }
 
-		//TODO: loop and clear resource labels
+                for (int i = 0; i < resourceInfoLabels.length; i++) {
+                    resourceInfoLabels[i][1].setText("");
+		    resourceInfoLabels[i][1].setToolTipText("");
+                }
             }
 
 	    if (clearLabels)
