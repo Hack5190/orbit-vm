@@ -374,8 +374,6 @@ public class controllerFrame extends JFrame {
                 generalInfoLabels[4][1].setText("Not Installed");
             }
 
-	    // TODO: tooltip for mutliple ip's
-
             // ips
             generalInfoLabels[5][1].setText(vm.getGuestPrimaryIP());
             if (vm.getGuestIPs() == null) {
