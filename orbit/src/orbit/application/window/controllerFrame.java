@@ -275,7 +275,8 @@ public class controllerFrame extends JFrame {
 		infoResourcePanels[i].setLayout(new BorderLayout());
 		//infoPanels[i].setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
 		resourceInfoLabels[i][0].setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-		resourceInfoLabels[i][0].setPreferredSize(new Dimension(125, 20));
+		resourceInfoLabels[i][1].setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		resourceInfoLabels[i][0].setPreferredSize(new Dimension(180, 20));
 		infoResourcePanels[i].add(resourceInfoLabels[i][0], BorderLayout.CENTER);
 		infoResourcePanels[i].add(resourceInfoLabels[i][1], BorderLayout.EAST);
 		formResourcePanels[i].add(infoResourcePanels[i], BorderLayout.NORTH);
@@ -415,7 +416,7 @@ public class controllerFrame extends JFrame {
 	    // hardware
 	    vh = vm.getHardware();
 	    generalInfoLabels[2][1].setText(vh.getNumCPU() + " vCPU");
-	    generalInfoLabels[3][1].setText(vh.getMemoryMB() + "MB");
+	    generalInfoLabels[3][1].setText(vh.getMemoryMB() + " MB");
 
 	    // tools
 	    if (vm.isToolsInstalled()) {
@@ -464,6 +465,16 @@ public class controllerFrame extends JFrame {
 	    } catch (Exception e) {
 		notesArea.setText("");
 	    }
+
+	    // cpu usage
+	    resourceInfoLabels[0][1].setText(vm.getVirtualMachine().getSummary().getQuickStats().overallCpuUsage + " MHz");
+
+	    // memory overhead
+	    resourceInfoLabels[1][1].setText(vm.getVirtualMachine().getSummary().getQuickStats().hostMemoryUsage + " MB");
+
+	    // memory active
+	    resourceInfoLabels[2][1].setText(vm.getVirtualMachine().getSummary().getQuickStats().guestMemoryUsage + " MB");
+
 
 	    // run timer
 	    virtualMachineCombo.setEnabled(true);
