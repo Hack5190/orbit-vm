@@ -36,6 +36,7 @@ public class controllerFrame extends JFrame {
     private JButton startButton, stopButton, resetButton;
     private JComboBox virtualMachineCombo;
     private JLabel generalInfoLabels[][];
+    private JLabel resourceInfoLabels[][];
     private JTextArea notesArea;
     private VMUpdateTimer vut;
 
@@ -137,7 +138,7 @@ public class controllerFrame extends JFrame {
         JImagePanel machinePanel;
         JPanel vmInfoPanel, vmGeneralPanel, vmResourcePanel;
 
-        JPanel formPanels[], infoPanels[];
+        JPanel formPanels[], infoPanels[], formResourcePanels[] ,infoResourcePanels[];
 
         //TODO: resource tab (with advance labels??)
 
@@ -146,11 +147,19 @@ public class controllerFrame extends JFrame {
 
         //labels
         generalInfoLabels = new JLabel[10][2];
+	resourceInfoLabels = new JLabel[7][2];
+
         for (int i = 0; i < generalInfoLabels.length; i++) {
             for (int j = 0; j < generalInfoLabels[i].length; j++) {
                 generalInfoLabels[i][j] = new JLabel();
             }
         }
+        for (int i = 0; i < resourceInfoLabels.length; i++) {
+            for (int j = 0; j < resourceInfoLabels[i].length; j++) {
+                resourceInfoLabels[i][j] = new JLabel();
+            }
+        }
+	
         generalInfoLabels[0][0].setText("Virtual Machine:");
         generalInfoLabels[1][0].setText("Guest OS:");
         generalInfoLabels[2][0].setText("CPU:");
@@ -161,6 +170,13 @@ public class controllerFrame extends JFrame {
         generalInfoLabels[7][0].setText("State:");
         generalInfoLabels[8][0].setText("Host:");
         generalInfoLabels[9][0].setText("Notes:");
+
+	resourceInfoLabels[0][0].setText("Consumed Host CPU:");
+	resourceInfoLabels[1][0].setText("Consumed Host Memory:");
+	resourceInfoLabels[2][0].setText("Active Guest Memory:");
+	resourceInfoLabels[3][0].setText("Provisioned Storage:");
+	resourceInfoLabels[4][0].setText("Non-shared Storage:");
+	resourceInfoLabels[5][0].setText("Used Storage:");
 
         // header
         try {
@@ -191,12 +207,6 @@ public class controllerFrame extends JFrame {
         vmGeneralPanel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), " General "));
         vmInfoPanel.add(vmGeneralPanel);
-
-        vmResourcePanel = new JPanel();
-        vmResourcePanel.setLayout(new GridLayout(1, 1));
-        vmResourcePanel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(), " Resources "));
-        vmInfoPanel.add(vmResourcePanel);
 
         notesArea = new JTextArea();
         notesArea.setEditable(false);
@@ -231,6 +241,42 @@ public class controllerFrame extends JFrame {
         infoPanels[5].setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
         vmGeneralPanel.add(formPanels[0], BorderLayout.CENTER);
+
+        vmResourcePanel = new JPanel();
+        vmResourcePanel.setLayout(new GridLayout(1, 1));
+        vmResourcePanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(), " Resources "));
+        vmInfoPanel.add(vmResourcePanel);
+
+        formResourcePanels = new JPanel[resourceInfoLabels.length];
+        infoResourcePanels = new JPanel[(resourceInfoLabels.length - 1)];
+        for (int i = 0; i < formResourcePanels.length; i++) {
+            formResourcePanels[i] = new JPanel();
+            formResourcePanels[i].setLayout(new BorderLayout());
+
+	    if (i > 0) {
+		formResourcePanels[(i-1)].add(formResourcePanels[i], BorderLayout.CENTER);
+	    }
+	    
+	    if (i < (resourceInfoLabels.length - 1)) {
+                infoResourcePanels[i] = new JPanel();
+                infoResourcePanels[i].setLayout(new BorderLayout());
+                //infoPanels[i].setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
+                resourceInfoLabels[i][0].setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+                resourceInfoLabels[i][0].setPreferredSize(new Dimension(125, 20));
+                infoResourcePanels[i].add(resourceInfoLabels[i][0], BorderLayout.CENTER);
+                infoResourcePanels[i].add(resourceInfoLabels[i][1], BorderLayout.EAST);
+                formResourcePanels[i].add(infoResourcePanels[i], BorderLayout.NORTH);
+            } else {
+                
+            }
+
+        }
+
+        // spacing
+        infoResourcePanels[2].setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+
+        vmResourcePanel.add(formResourcePanels[0], BorderLayout.CENTER);
 
         // footer
         vmControlToolBar = new JToolBar("Virtual Machine Controls");
@@ -403,10 +449,6 @@ public class controllerFrame extends JFrame {
             } catch (Exception e) {
                 notesArea.setText("");
             }
-
-	    // testing
-	    notesArea.setText("");
-
 
             // run timer
 	    virtualMachineCombo.setEnabled(true);
