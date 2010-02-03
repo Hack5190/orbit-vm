@@ -13,6 +13,7 @@ public class OrbitSSHTunnel {
 
     private JSch jsch;
     private Session session;
+    private String remotehost;
 
     class localUserInfo implements UserInfo {
 
@@ -47,17 +48,34 @@ public class OrbitSSHTunnel {
     }
 
     public OrbitSSHTunnel(String host, String username, String password, String remotehost) throws Exception {
+	// locals
+	String hostname;
+	int port = 22;
+
+
+	// parse host
+	if (host.indexOf(':') > -1) {
+	    hostname = host.substring(0, host.indexOf(':'));
+	    port = Integer.parseInt((host.substring((host.indexOf(':') + 1), host.length())));
+	} else {
+	    hostname = host;
+	}
+
+	// create ssh connetion
 	jsch = new JSch();
-	session = jsch.getSession(username, host.substring(0, host.indexOf(':')), Integer.getInteger(host.substring(host.indexOf(':'), host.length())));
+	session = jsch.getSession(username, hostname,  port);
 	session.setUserInfo(new localUserInfo(password));
-	session.setPortForwardingL(98123, remotehost, 443);
+	this.remotehost = remotehost;
+	
     }
 
-    public void Disconnect() {
+    public void Disconnect() throws Exception {
+	session.delPortForwardingL(9123);
 	session.disconnect();
     }
 
     public void Conenct() throws Exception {
+	session.setPortForwardingL(9123, remotehost, 443);
 	session.connect();
     }
 }
