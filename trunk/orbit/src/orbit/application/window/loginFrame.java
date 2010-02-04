@@ -75,7 +75,6 @@ public class loginFrame extends JFrame {
 	window.attachEvents();
 	window.restoreSession();
 
-	//TODO: ssh tunneling (http://www.beanizer.org/site/index.php/en/Articles/Java-ssh-tunneling-with-jsch.html)
     }
 
     /**

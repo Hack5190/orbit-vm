@@ -1,5 +1,7 @@
 package orbit.application.window;
 
+// TODO: label refreshing speedup? how?
+
 /**
  * Simple VM Controller
  * @author sjorge
@@ -157,8 +159,6 @@ public class controllerFrame extends JFrame {
 	JPanel vmInfoPanel, vmGeneralPanel, vmResourcePanel;
 
 	JPanel formPanels[], infoPanels[], formResourcePanels[], infoResourcePanels[];
-
-	//TODO: resource tab (with advance labels??)
 
 	// layout
 	content.setLayout(new BorderLayout(0, 0));
