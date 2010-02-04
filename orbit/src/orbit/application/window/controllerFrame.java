@@ -28,6 +28,7 @@ public class controllerFrame extends JFrame {
 
     // variables
     private ServiceInstance si;
+    private OrbitSSHTunnel tun;
     private controllerFrame window;
     private Container content;
     private Properties config;
@@ -44,11 +45,12 @@ public class controllerFrame extends JFrame {
      * controllerFrame Constructor
      * @param si ServiceInstance
      */
-    public controllerFrame(ServiceInstance serviceInstant, Properties cfg) {
+    public controllerFrame(ServiceInstance serviceInstant, OrbitSSHTunnel tunnel, Properties cfg) {
 	// self reference
 	window = this;
 	config = cfg;
 	si = serviceInstant;
+	tun = tunnel;
 
 	// get content
 	content = window.getContentPane();
@@ -60,15 +62,19 @@ public class controllerFrame extends JFrame {
 
 	    @Override
 	    public void windowClosing(WindowEvent w) {
+		// disconnect
+		si.getServerConnection().logout();
+		try {
+		    tun.Disconnect();
+		} catch (Exception ex) {
+		}
+
 		if (new Boolean(config.getProperty("interface.close", "true"))) {
 		    System.exit(0);
 		} else {
 		    // create login window
 		    JFrame loginWindow = new loginFrame();
 		    loginWindow.setVisible(true);
-
-		    // disconnect
-		    si.getServerConnection().logout();
 
 		    // dispose this window
 		    window.dispose();
@@ -488,8 +494,8 @@ public class controllerFrame extends JFrame {
 	    // diskprov
 	    div = 1024L;
 	    for (int i = 0; i < 3; i++) {
-		if ( (double)(diskProv / div) <= 1024d ) {
-		    resourceInfoLabels[3][1].setText(String.format("%.2f %s", (double)(diskProv / div) , stringSize[i]));
+		if ((double) (diskProv / div) <= 1024d) {
+		    resourceInfoLabels[3][1].setText(String.format("%.2f %s", (double) (diskProv / div), stringSize[i]));
 		    break;
 		}
 		div *= 1024L;
@@ -498,8 +504,8 @@ public class controllerFrame extends JFrame {
 	    // disk non share
 	    div = 1024L;
 	    for (int i = 0; i < 3; i++) {
-		if ( (double)(diskNonShared / div) <= 1024d ) {
-		    resourceInfoLabels[4][1].setText(String.format("%.2f %s", (double)(diskNonShared / div), stringSize[i]));
+		if ((double) (diskNonShared / div) <= 1024d) {
+		    resourceInfoLabels[4][1].setText(String.format("%.2f %s", (double) (diskNonShared / div), stringSize[i]));
 		    break;
 		}
 		div *= 1024L;
@@ -508,8 +514,8 @@ public class controllerFrame extends JFrame {
 	    // disk used
 	    div = 1024L;
 	    for (int i = 0; i < 3; i++) {
-		if ( (double)(diskUsed / div) <= 1024d ) {
-		    resourceInfoLabels[5][1].setText(String.format("%.2f %s", (double)(diskUsed / div), stringSize[i]));
+		if ((double) (diskUsed / div) <= 1024d) {
+		    resourceInfoLabels[5][1].setText(String.format("%.2f %s", (double) (diskUsed / div), stringSize[i]));
 		    break;
 		}
 		div *= 1024L;
