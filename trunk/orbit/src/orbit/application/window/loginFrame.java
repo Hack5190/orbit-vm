@@ -122,6 +122,9 @@ public class loginFrame extends JFrame {
 	    // set recent server/user
 	    config.setProperty("recent.server", serverText.getText());
 	    config.setProperty("recent.login", loginText.getText());
+	    config.setProperty("recent.ssh.enable", Boolean.toString(tunnelCheck.isSelected()));
+	    config.setProperty("recent.ssh.host", sshHostText.getText());
+	    config.setProperty("recent.ssh.username", sshUserText.getText());
 
 	    // save file
 	    config.store(new FileOutputStream("orbit.properties"), null);
@@ -137,6 +140,15 @@ public class loginFrame extends JFrame {
 	// set recent server/user
 	serverText.setText(config.getProperty("recent.server", ""));
 	loginText.setText(config.getProperty("recent.login", "root"));
+	tunnelCheck.setSelected(Boolean.parseBoolean(config.getProperty("recent.ssh.enable", "false")));
+	if (tunnelCheck.isSelected()) {
+	    window.setSize(new Dimension(350, 370));
+	    window.setPreferredSize(new Dimension(350, 370));
+	    window.setMaximumSize(new Dimension(350, 370));
+	}
+
+	sshHostText.setText(config.getProperty("recent.ssh.host", ""));
+	sshUserText.setText(config.getProperty("recent.ssh.username", ""));
 
 	// focus password if needed
 	if (!serverText.getText().isEmpty()) {
@@ -159,7 +171,7 @@ public class loginFrame extends JFrame {
     public void createGUI() {
 	// locals
 	JPanel formPanels[], serverPanel, loginPanel,
-		passwordPanel, buttonPanel, statusPanel, 
+		passwordPanel, buttonPanel, statusPanel,
 		tunnelPanel, sshUserPanel, sshPassPanel,
 		sshHostPanel;
 
