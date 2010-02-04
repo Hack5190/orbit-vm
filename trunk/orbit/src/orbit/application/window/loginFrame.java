@@ -58,9 +58,7 @@ public class loginFrame extends JFrame {
 	window.setTitle("Orbit Manager");
 	window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	window.setResizable(false);
-	window.setSize(new Dimension(350, 265));
-	window.setPreferredSize(new Dimension(350, 265));
-	window.setMaximumSize(new Dimension(350, 265));
+	window.toggleFormSize();
 	window.centerScreen();
 
 	// icon
@@ -75,6 +73,35 @@ public class loginFrame extends JFrame {
 	window.attachEvents();
 	window.restoreSession();
 
+    }
+
+    /**
+     * Correct size on all platforms
+     */
+    private void toggleFormSize() {
+	int height = 0;
+	if (tunnelCheck == null || !tunnelCheck.isSelected()) {
+	    height = 245;
+	    if (System.getProperty("os.name").startsWith("Mac")) {
+		height = 270;
+	    }
+	    if (System.getProperty("os.name").startsWith("Linux")) {
+		height = 263;
+	    }
+	} else {
+	    height = 345;
+	    if (System.getProperty("os.name").startsWith("Mac")) {
+		height = 365;
+	    }
+	    if (System.getProperty("os.name").startsWith("Linux")) {
+		height = 350;
+	    }
+
+	}
+
+	window.setSize(new Dimension(350, height));
+	window.setPreferredSize(new Dimension(350, height));
+	window.setMaximumSize(new Dimension(350, height));
     }
 
     /**
@@ -140,11 +167,7 @@ public class loginFrame extends JFrame {
 	serverText.setText(config.getProperty("recent.server", ""));
 	loginText.setText(config.getProperty("recent.login", "root"));
 	tunnelCheck.setSelected(Boolean.parseBoolean(config.getProperty("recent.ssh.enable", "false")));
-	if (tunnelCheck.isSelected()) {
-	    window.setSize(new Dimension(350, 365));
-	    window.setPreferredSize(new Dimension(350, 365));
-	    window.setMaximumSize(new Dimension(350, 365));
-	}
+	window.toggleFormSize();
 
 	sshHostText.setText(config.getProperty("recent.ssh.host", ""));
 	sshUserText.setText(config.getProperty("recent.ssh.username", ""));
@@ -361,15 +384,7 @@ public class loginFrame extends JFrame {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-	    if (tunnelCheck.isSelected()) {
-		window.setSize(new Dimension(350, 365));
-		window.setPreferredSize(new Dimension(350, 365));
-		window.setMaximumSize(new Dimension(350, 365));
-	    } else {
-		window.setSize(new Dimension(350, 265));
-		window.setPreferredSize(new Dimension(350, 265));
-		window.setMaximumSize(new Dimension(350, 265));
-	    }
+	    window.toggleFormSize();
 
 	}
     }
