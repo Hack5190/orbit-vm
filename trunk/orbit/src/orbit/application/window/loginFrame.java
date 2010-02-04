@@ -233,7 +233,7 @@ public class loginFrame extends JFrame {
 	formLabels[0].setText("Server:");
 	formLabels[1].setText("Login:");
 	formLabels[2].setText("Password:");
-	formLabels[3].setText("SSH Server:");
+	formLabels[3].setText("Ssh Server:");
 	formLabels[4].setText("Username:");
 	formLabels[5].setText("Password:");
 
@@ -341,7 +341,11 @@ public class loginFrame extends JFrame {
 	    ServerConnector sc = new ServerConnector(
 		    serverText.getText(),
 		    loginText.getText(),
-		    new String(passwordText.getPassword()));
+		    new String(passwordText.getPassword()),
+		    tunnelCheck.isSelected(),
+		    sshHostText.getText(),
+		    sshUserText.getText(),
+		    new String(sshPassText.getPassword()));
 	    sc.start();
 
 	}
@@ -377,24 +381,30 @@ public class loginFrame extends JFrame {
     class ServerConnector extends Thread {
 
 	// variables
-	private boolean valid = true;
+	private boolean valid = true, tunnel = false;
 	private URL urlServer = null;
-	private String stringUser, stringPassword;
+	private String stringUser, stringPassword, stringSshHost, stringSshUsername, stringSshPassword, stringSshRemoteHost;
 	private ServiceInstance si = null;
+	private OrbitSSHTunnel tun = null;
 
-	ServerConnector(String url, String user, String password) {
+	ServerConnector(String url, String user, String password, boolean tunnel, String sshHost, String sshUser, String sshPassword) {
 	    // status
 	    this.statusMessage("Connecting...", "processing");
 
 	    // store variables
 	    this.stringUser = user;
 	    this.stringPassword = password;
+	    this.stringSshHost = sshHost;
+	    this.stringSshUsername = sshUser;
+	    this.stringSshPassword = sshPassword;
+	    this.stringSshRemoteHost = url;
+	    this.tunnel = tunnel;
 	    if (!url.isEmpty()) {
 		try {
 		    if (url.endsWith("/sdk")) { // allow for full url entry
 			urlServer = new URL(url);
 		    } else {
-			urlServer = new URL("https://" + url + "/sdk");
+			urlServer = new URL("https://" + (tunnel ? "localhost:9123" : url) + "/sdk");
 		    }
 		} catch (java.net.MalformedURLException mue) {
 		    valid = false;
@@ -411,6 +421,26 @@ public class loginFrame extends JFrame {
 		valid = false;
 		this.statusMessage("Please enter login.", "alert");
 		loginText.requestFocusInWindow();
+	    }
+
+	    if (tunnel) {
+		if (valid && stringSshUsername.isEmpty()) {
+		    valid = false;
+		    this.statusMessage("Please enter ssh server.", "alert");
+		    loginText.requestFocusInWindow();
+		}
+
+		if (valid && stringSshUsername.isEmpty()) {
+		    valid = false;
+		    this.statusMessage("Please enter ssh user.", "alert");
+		    loginText.requestFocusInWindow();
+		}
+
+		if (valid && stringSshPassword.isEmpty()) {
+		    valid = false;
+		    this.statusMessage("Please enter ssh pass.", "alert");
+		    loginText.requestFocusInWindow();
+		}
 	    }
 
 	}
@@ -434,9 +464,44 @@ public class loginFrame extends JFrame {
 	    statusLabel.repaint();
 	}
 
+	@Override
 	public void run() {
+
+
 	    // connect
+	    if (valid && tunnel) {
+		// tunnel
+		try {
+		    tun = new OrbitSSHTunnel(stringSshHost, stringSshUsername, stringSshPassword, stringSshRemoteHost);
+		    tun.Conenct();
+		} catch (java.net.UnknownHostException ex) {
+		    valid = false;
+		    this.statusMessage("Unknown ssh server!", "alert");
+		    try {
+			tun.Disconnect();
+		    } catch (Exception e) {
+		    }
+		} catch (Exception ex) {
+		    valid = false;
+		    if (ex.toString().startsWith("com.jcraft.jsch.JSchException")) {
+			this.statusMessage("Ssh auth error!", "error");
+		    } else {
+			this.statusMessage("Tunnel failed!", "error");
+			ex.printStackTrace(System.err);
+		    }
+		    try {
+			tun.Disconnect();
+		    } catch (Exception e) {
+		    }
+		} finally {
+		    if (valid) {
+			this.statusMessage("Tunnel established!", "processing");
+		    }
+		}
+	    }
+
 	    if (valid) {
+		// connection
 		try {
 		    si = new ServiceInstance(urlServer, stringUser, stringPassword, true);
 		} catch (com.vmware.vim25.InvalidLogin il) {
@@ -452,7 +517,7 @@ public class loginFrame extends JFrame {
 			this.statusMessage("Connected!", "ok");
 
 			// open manager frame
-			JFrame managerWindow = ((config.getProperty("interface", "manager").equalsIgnoreCase("controller")) ? new controllerFrame(si, config) : new managerFrame(si, config));
+			JFrame managerWindow = ((config.getProperty("interface", "manager").equalsIgnoreCase("controller")) ? new controllerFrame(si, tun, config) : new managerFrame(si, tun, config));
 			managerWindow.setVisible(true);
 			window.dispose();
 		    }
