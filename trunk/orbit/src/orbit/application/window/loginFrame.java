@@ -58,9 +58,9 @@ public class loginFrame extends JFrame {
 	window.setTitle("Orbit Manager");
 	window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	window.setResizable(false);
-	window.setSize(new Dimension(350, 270));
-	window.setPreferredSize(new Dimension(350, 270));
-	window.setMaximumSize(new Dimension(350, 270));
+	window.setSize(new Dimension(350, 265));
+	window.setPreferredSize(new Dimension(350, 265));
+	window.setMaximumSize(new Dimension(350, 265));
 	window.centerScreen();
 
 	// icon
@@ -141,9 +141,9 @@ public class loginFrame extends JFrame {
 	loginText.setText(config.getProperty("recent.login", "root"));
 	tunnelCheck.setSelected(Boolean.parseBoolean(config.getProperty("recent.ssh.enable", "false")));
 	if (tunnelCheck.isSelected()) {
-	    window.setSize(new Dimension(350, 370));
-	    window.setPreferredSize(new Dimension(350, 370));
-	    window.setMaximumSize(new Dimension(350, 370));
+	    window.setSize(new Dimension(350, 365));
+	    window.setPreferredSize(new Dimension(350, 365));
+	    window.setMaximumSize(new Dimension(350, 365));
 	}
 
 	sshHostText.setText(config.getProperty("recent.ssh.host", ""));
@@ -362,13 +362,13 @@ public class loginFrame extends JFrame {
 
 	public void actionPerformed(ActionEvent e) {
 	    if (tunnelCheck.isSelected()) {
-		window.setSize(new Dimension(350, 370));
-		window.setPreferredSize(new Dimension(350, 370));
-		window.setMaximumSize(new Dimension(350, 370));
+		window.setSize(new Dimension(350, 365));
+		window.setPreferredSize(new Dimension(350, 365));
+		window.setMaximumSize(new Dimension(350, 365));
 	    } else {
-		window.setSize(new Dimension(350, 270));
-		window.setPreferredSize(new Dimension(350, 270));
-		window.setMaximumSize(new Dimension(350, 270));
+		window.setSize(new Dimension(350, 265));
+		window.setPreferredSize(new Dimension(350, 265));
+		window.setMaximumSize(new Dimension(350, 265));
 	    }
 
 	}
