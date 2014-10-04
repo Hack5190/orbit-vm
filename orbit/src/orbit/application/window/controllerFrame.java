@@ -36,7 +36,7 @@ public class controllerFrame extends JFrame {
     private Properties config;
     private OrbitVirtualMachine[] virtualMachines;
     private JToolBar vmControlToolBar;
-    private JButton startButton, stopButton, resetButton;
+    private JButton startButton, stopButton, resetButton, killButton;
     private JComboBox virtualMachineCombo;
     private JLabel generalInfoLabels[][];
     private JLabel resourceInfoLabels[][];
@@ -313,7 +313,11 @@ public class controllerFrame extends JFrame {
 	resetButton = new JButton();
 	new controleButtonClick(resetButton, "reset");
 	vmControlToolBar.add(resetButton);
-
+        
+	killButton = new JButton();
+	new controleButtonClick(killButton, "kill");
+	vmControlToolBar.add(killButton);
+        
 	// load data
 	new ShowVM(true).start();
     }
@@ -375,7 +379,8 @@ public class controllerFrame extends JFrame {
 		}
 		resetButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-reset.png")));
 		stopButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/vm-poweroff.png")));
-	    } catch (Exception e) {
+                killButton.setIcon(new ImageIcon(window.getClass().getResource("/orbit/application/resources/vmware/icons/red_alarms.png")));
+            } catch (Exception e) {
 		if (vp == VirtualMachinePowerState.poweredOn) {
 		    startButton.setText("Suspend");
 		} else {
@@ -391,14 +396,17 @@ public class controllerFrame extends JFrame {
 		} else {
 		    stopButton.setText("Power Off");
 		}
+                stopButton.setText("Force Power Off");
 
 	    } finally {
 		if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
 		    stopButton.setEnabled(true);
 		    resetButton.setEnabled(true);
+                    killButton.setEnabled(true);
 		} else {
 		    stopButton.setEnabled(false);
 		    resetButton.setEnabled(false);
+                    killButton.setEnabled(false);
 		}
 	    }
 
@@ -588,6 +596,14 @@ public class controllerFrame extends JFrame {
 
 			    if (JOptionPane.showConfirmDialog(null, "Are you sure you want to " + actionString + " this vm?") == JOptionPane.YES_OPTION) {
 				vm.powerOff(true);
+			    }
+			}
+                    } else if (action.equalsIgnoreCase("kill")) {
+			if (vm.getPowerState() == VirtualMachinePowerState.poweredOn) {
+			    String actionString  = "power off";
+
+			    if (JOptionPane.showConfirmDialog(null, "Are you sure you want to " + actionString + " this vm?") == JOptionPane.YES_OPTION) {
+				vm.powerOff(false);
 			    }
 			}
 		    } else if (action.equalsIgnoreCase("reset")) {
