@@ -81,7 +81,7 @@ public class loginFrame extends JFrame {
     private void toggleFormSize() {
 	int height = 0;
 	if (tunnelCheck == null || !tunnelCheck.isSelected()) {
-	    height = 245;
+	    height = 248;
 	    if (System.getProperty("os.name").startsWith("Mac")) {
 		height = 270;
 	    }
