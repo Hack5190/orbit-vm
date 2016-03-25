@@ -1,0 +1,18 @@
+# Introduction #
+
+Shared short-term todo list
+
+# Details #
+
+- Implement Server Class (sjorge)
+> - set connection object
+> - get list of hosts
+> - other info available?
+
+- Implement Host Class (??)
+> - get list of virtual machines
+> - other info available?
+
+- Implement VM Class (??)
+> - allow form basic power state changes? (state variable or multi methode?)
+> - other info available?
